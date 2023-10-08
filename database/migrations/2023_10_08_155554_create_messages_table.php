@@ -25,14 +25,6 @@ return new class extends Migration
                 ->references('id')
                 ->on('users'); // Reference to the "users" table
 
-
-
-
-            // Add any other fields you need for messages
-
-            $table->timestamps();
-
-
             $table->timestamps();
         });
     }

@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
+use App\Models\Ticket;
+use App\Models\Message;
+use App\Models\TicketCategory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +16,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        collect([
+            'Technical support', 'Financial', 'Doubts'
+        ])->each(function ($category_name) {
+            TicketCategory::create([
+                  'name' => $category_name
+              ]);
+        });
+
+        $tickets = Ticket::factory()->count(20)->create();
+        $tickets->each(function ($ticket) {
+            $messages = Message::factory()->count(5)->make();
+            $ticket->messages()->saveMany($messages);
+        });
     }
 }
