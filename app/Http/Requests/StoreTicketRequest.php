@@ -11,7 +11,7 @@ class StoreTicketRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,11 +25,11 @@ class StoreTicketRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,gif',
-            'category_id' => 'required|exists:ticket_categories,id',
+            'category' => 'required|exists:ticket_categories,id',
             'status' => 'required|in:open,closed,in progress,on hold',
             'priority' => 'required|in:high,medium,low',
             'feedback_notes' => 'nullable|string',
-            'creator_user_id' => 'nullable|exists:users,id', // Ensure the creator user exists
+            'creator_user' => 'nullable|exists:users,id', // Ensure the creator user exists
         ];
     }
 }
