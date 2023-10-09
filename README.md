@@ -4,6 +4,8 @@ First of all thank you for giving me this opportunity, means a lot to me.
 
 This application has been developed in a WSL environment.
 
+The Steps of this services are described in TaskBreakDown.md file
+
 ## Prerequisites
 
 Make sure you have PHP, Composer, and Docker installed on your computer. Sail uses Docker to set up the development environment.
@@ -12,6 +14,18 @@ Ensure you have Git installed for version control (optional but recommended).
 
 ## Configuration
 This application comes with Laravel Sail inside. So after successfully clone the app
+
+### Database Configuration
+
+```
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=helpdesk_backend
+DB_USERNAME=sail
+DB_PASSWORD=password
+
+```
 
 ### Install all dependencies
 
