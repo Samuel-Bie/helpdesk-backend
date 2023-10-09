@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\TicketResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class TicketResourceCollection extends ResourceCollection

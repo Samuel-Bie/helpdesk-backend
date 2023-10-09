@@ -11,7 +11,7 @@ class UpdateTicketRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,12 +24,12 @@ class UpdateTicketRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,gif',
-            'category_id' => 'required|exists:ticket_categories,id',
+            'image' => 'nullable|string',
+            'category' => 'required|exists:ticket_categories,id',
             'status' => 'required|in:open,closed,in progress,on hold',
             'priority' => 'required|in:high,medium,low',
             'feedback_notes' => 'nullable|string',
-            'creator_user_id' => 'nullable|exists:users,id',
+            'creator_user' => 'nullable|exists:users,id',
         ];
     }
 }

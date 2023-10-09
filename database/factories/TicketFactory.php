@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\TicketCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +21,7 @@ class TicketFactory extends Factory
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
             'image' => $this->faker->imageUrl(), // Example for generating image URLs
-            'category_id' => $this->faker->numberBetween(1, 5), // Assuming you have ticket categories with IDs 1 to 5
+            'category_id' => TicketCategory::inRandomOrder()->first()->id,
             'status' => $this->faker->randomElement(['open', 'closed', 'in progress', 'on hold']),
             'priority' => $this->faker->randomElement(['high', 'medium', 'low']),
             'feedback_notes' => $this->faker->paragraph,

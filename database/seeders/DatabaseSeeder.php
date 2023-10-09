@@ -16,6 +16,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // create 1 user with the employee role
+        User::factory()->create([
+            'name' => 'Employee User',
+            'email' => 'employee.user@test.com',
+            'is_employee' => true,
+        ]);
+
+        // create 1 regular user with the employee role
+        User::factory()->create([
+            'name' => 'Regular User',
+            'email' => 'regular.user@test.com',
+            'is_employee' => false,
+        ]);
+
+
+
         User::factory(10)->create();
 
         collect([

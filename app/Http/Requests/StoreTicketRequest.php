@@ -24,7 +24,7 @@ class StoreTicketRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,gif',
+            'image' => 'nullable|string',
             'category' => 'required|exists:ticket_categories,id',
             'status' => 'required|in:open,closed,in progress,on hold',
             'priority' => 'required|in:high,medium,low',

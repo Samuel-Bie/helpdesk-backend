@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TicketCategory;
 
 class Ticket extends Model
 {
@@ -33,5 +34,13 @@ class Ticket extends Model
         return $this->hasMany(Message::class, 'ticket_id');
     }
 
-
+    /**
+     * Get the category that owns the Ticket
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(TicketCategory::class, 'category_id');
+    }
 }
