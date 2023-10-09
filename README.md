@@ -54,7 +54,7 @@ Once the containers are up and running, you can access your Laravel application 
 
 For testing in postman use the the employee user
 ```
-employee.user@mail.com
+employee.user@test.com
 password
 
 ```
@@ -62,7 +62,7 @@ password
 
 For testing in postman use the the regular user
 ```
-regular.user@mail.com
+regular.user@test.com
 password
 
 ```
