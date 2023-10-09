@@ -27,7 +27,8 @@ class LoginController extends Controller
                 throw new UnauthorizedHttpException('Invalid login credentials.', "Invalid login credentials.");
             }
             return response()->json([
-                'token' => $user->createToken($request->input('application', 'spa'))->plainTextToken
+                'token' => $user->createToken($request->input('application', 'spa'))->plainTextToken,
+                'user' => $user
             ], HttpStatusCode::HTTP_OK);
         }
         throw new UnauthorizedHttpException('Invalid login credentials.', "Invalid login credentials.");
