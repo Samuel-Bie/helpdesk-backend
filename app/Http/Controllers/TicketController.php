@@ -6,14 +6,37 @@ use App\Models\Ticket;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TicketResource;
 use App\Http\Requests\StoreTicketRequest;
+use App\Http\Requests\TicketFilterRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use App\Http\Resources\TicketHistoryResource;
+use App\Http\Requests\UpdateTicketStatusRequest;
 use App\Http\Resources\TicketResourceCollection;
 
 class TicketController extends Controller
 {
-    public function index()
+    public function index(TicketFilterRequest  $request)
     {
-        $tickets = Ticket::all();
+        // Validation has passed, you can access the validated data
+        $validatedData = $request->validated();
+
+        // Build your query based on the validated data
+        $query = Ticket::query();
+
+        if (isset($validatedData['status'])) {
+            $query->where('status', $validatedData['status']);
+        }
+
+        if (isset($validatedData['priority'])) {
+            $query->where('priority', $validatedData['priority']);
+        }
+
+        if (isset($validatedData['category_id'])) {
+            $query->where('category_id', $validatedData['category_id']);
+        }
+
+        // Execute the query
+        $tickets = $query->get();
+
         return new TicketResourceCollection($tickets);
     }
 
@@ -55,6 +78,19 @@ class TicketController extends Controller
         $ticket->save();
 
         return response()->json(new TicketResource($ticket), 202);
+    }
+
+    public function status(UpdateTicketStatusRequest $request, Ticket $ticket)
+    {
+        $ticket->status = $request->input('status');
+        $ticket->save();
+        return response()->json(new TicketResource($ticket), 202);
+    }
+
+    public function history(Ticket $ticket)
+    {
+        $ticket->load('messages');
+        return response()->json(new TicketHistoryResource($ticket), 200);
     }
 
     public function destroy(Ticket $ticket)

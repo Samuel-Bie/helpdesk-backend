@@ -29,5 +29,7 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tickets', TicketController::class);
+    Route::patch('tickets/{ticket}/status', [TicketController::class, 'status']);
+    Route::get('tickets/{ticket}/history', [TicketController::class, 'history']);
     Route::apiResource('tickets.messages', MessageController::class)->shallow();
 });
