@@ -64,9 +64,9 @@ The database will come with basic data
 
 ### Access the Application:
 
-Once the containers are up and running, you can access your Laravel application at http://localhost.
+Once the containers are up and running, you can access your Laravel application at http://localhost .
 
-For testing in postman use the the employee user
+For testing in postman use the employee user
 ```
 employee.user@test.com
 password
@@ -74,7 +74,7 @@ password
 ```
 
 
-For testing in postman use the the regular user
+For testing in postman use the regular user
 ```
 regular.user@test.com
 password
