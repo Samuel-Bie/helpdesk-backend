@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\TicketCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,7 @@ Route::prefix('auth')->group(function () {
 
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('categories', [TicketCategoryController::class, 'index']);
     Route::apiResource('tickets', TicketController::class);
     Route::patch('tickets/{ticket}/status', [TicketController::class, 'status']);
     Route::get('tickets/{ticket}/history', [TicketController::class, 'history']);
