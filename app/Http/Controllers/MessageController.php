@@ -33,7 +33,7 @@ class MessageController extends Controller
         $message->content = $request->input('content');
         $message->image = $request->input('image');
         $message->ticket_id = $request->input('ticket_id');
-        $message->sender_user_id = $request->input('sender_user_id');
+        $message->sender_user_id = $request->user()->id;
         $message->save();
 
         return response()->json(new MessageResource($message), 201);

@@ -29,7 +29,6 @@ class StoreTicketRequest extends FormRequest
             'status' => 'required|in:open,closed,in progress,on hold',
             'priority' => 'required|in:high,medium,low',
             'feedback_notes' => 'nullable|string',
-            'creator_user' => 'nullable|exists:users,id', // Ensure the creator user exists
         ];
     }
 }

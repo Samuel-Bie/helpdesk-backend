@@ -52,7 +52,7 @@ class TicketController extends Controller
         $ticket->status = $request->input('status');
         $ticket->priority = $request->input('priority');
         $ticket->feedback_notes = $request->input('feedback_notes');
-        $ticket->creator_user_id = $request->input('creator_user');
+        $ticket->creator_user_id = $request->user()->id;
         $ticket->save();
 
         return response()->json(new TicketResource($ticket), 201);
@@ -74,7 +74,6 @@ class TicketController extends Controller
         $ticket->status = $request->input('status');
         $ticket->priority = $request->input('priority');
         $ticket->feedback_notes = $request->input('feedback_notes');
-        $ticket->creator_user_id = $request->input('creator_user');
         $ticket->save();
 
         return response()->json(new TicketResource($ticket), 202);
