@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
 
 
 
-        User::factory(10)->create();
+        User::factory(2)->create();
 
         collect([
             'Technical support', 'Financial', 'Doubts'
@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
               ]);
         });
 
-        $tickets = Ticket::factory()->count(20)->create();
+        $tickets = Ticket::factory()->count(3)->create();
         $tickets->each(function ($ticket) {
             $messages = Message::factory()->count(5)->make();
             $ticket->messages()->saveMany($messages);
