@@ -6,6 +6,10 @@ This application has been developed in a WSL environment.
 
 The Steps of this services are described in TaskBreakDown.md file
 
+
+## Arch Concepts
+I created an file that displays the architecture of the application, which is located in the root of the project (arch.drawio or arch.png)
+
 ## Prerequisites
 
 Make sure you have PHP, Composer, and Docker installed on your computer. Sail uses Docker to set up the development environment.
