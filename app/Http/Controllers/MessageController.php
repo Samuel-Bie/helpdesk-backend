@@ -32,8 +32,8 @@ class MessageController extends Controller
 
         $message->content = $request->input('content');
         $message->image = $request->input('image');
-        $message->ticket_id = $request->input('ticket_id');
-        $message->sender_user_id = $request->user()->id;
+        $message->ticket()->associate($ticket);
+        $message->sender()->associate($request->user()) ;
         $message->save();
 
         return response()->json(new MessageResource($message), 201);

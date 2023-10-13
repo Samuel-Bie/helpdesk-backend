@@ -34,8 +34,14 @@ class TicketController extends Controller
             $query->where('category_id', $validatedData['category_id']);
         }
 
-        // Execute the query
-        $tickets = $query->get();
+        if ($request->user()->is_employee) {
+            // Execute the query
+            $tickets = $query->get();
+        } else {
+            $tickets = $query
+                ->where('creator_user_id', $request->user()->id)
+                ->get();
+        }
 
         return new TicketResourceCollection($tickets);
     }
@@ -60,41 +66,61 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
-        return response()->json(new TicketResource($ticket), 200);
+        if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
+            return response()->json(new TicketResource($ticket), 200);
+        } else {
+            throw new \Exception("You are not authorized to view this ticket", 403);
+        }
     }
 
 
 
     public function update(UpdateTicketRequest $request, Ticket $ticket)
     {
-        $ticket->title = $request->input('title');
-        $ticket->description = $request->input('description');
-        $ticket->image = $request->input('image');
-        $ticket->category_id = $request->input('category');
-        $ticket->status = $request->input('status');
-        $ticket->priority = $request->input('priority');
-        $ticket->feedback_notes = $request->input('feedback_notes');
-        $ticket->save();
+        if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
+            $ticket->title = $request->input('title');
+            $ticket->description = $request->input('description');
+            $ticket->image = $request->input('image');
+            $ticket->category_id = $request->input('category');
+            $ticket->status = $request->input('status');
+            $ticket->priority = $request->input('priority');
+            $ticket->feedback_notes = $request->input('feedback_notes');
+            $ticket->save();
 
-        return response()->json(new TicketResource($ticket), 202);
+            return response()->json(new TicketResource($ticket), 202);
+        } else {
+            throw new \Exception("You are not authorized to update this ticket", 403);
+        }
     }
 
     public function status(UpdateTicketStatusRequest $request, Ticket $ticket)
     {
-        $ticket->status = $request->input('status');
-        $ticket->save();
-        return response()->json(new TicketResource($ticket), 202);
+        if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
+            $ticket->status = $request->input('status');
+            $ticket->save();
+            return response()->json(new TicketResource($ticket), 202);
+        } else {
+            throw new \Exception("You are not authorized to update this ticket", 403);
+        }
     }
 
     public function history(Ticket $ticket)
     {
-        $ticket->load('messages');
-        return response()->json(new TicketHistoryResource($ticket), 200);
+        if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
+            $ticket->load('messages.user');
+            return response()->json(new TicketHistoryResource($ticket), 200);
+        } else {
+            throw new \Exception("You are not authorized to view this ticket", 403);
+        }
     }
 
     public function destroy(Ticket $ticket)
     {
-        $ticket->delete();
-        return response()->json(null, 204);
+        if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
+            $ticket->delete();
+            return response()->json(null, 204);
+        } else {
+            throw new \Exception("You are not authorized to view this ticket", 403);
+        }
     }
 }

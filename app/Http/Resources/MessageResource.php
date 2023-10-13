@@ -20,6 +20,7 @@ class MessageResource extends JsonResource
             'image' => $this->image,
             'ticket_id' => $this->ticket_id,
             'sender_user_id' => $this->sender_user_id,
+            'full_user_info' => new UserResource($this->whenLoaded('user')),
             'created_at' => $this->created_at,
             'links' => [
                 'self' => route('messages.show', ['message' => $this->id]),

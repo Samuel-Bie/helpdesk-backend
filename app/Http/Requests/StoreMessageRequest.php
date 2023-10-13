@@ -24,7 +24,6 @@ class StoreMessageRequest extends FormRequest
         return [
             'content' => 'required|string', // Adjust the validation rules as needed
             'image' => 'nullable|string', // Example validation for image upload
-            'ticket_id' => 'required|exists:tickets,id', // Ensure the ticket exists
         ];
     }
 }
