@@ -38,14 +38,6 @@ DB_PASSWORD=password
 composer install
 ```
 
-### Initialize Sail
-
-Initialize the Laravel Sail environment by running the following command in the root of your Laravel project:
-
-```bash
-php artisan sail:install
-
-```
 
 
 ### Start Docker Containers:
@@ -65,6 +57,15 @@ The database will come with basic data
 ./vendor/bin/sail artisan migrate:fresh --seed
 
 ```
+
+
+### Run the queue worker
+
+```bash
+./vendor/bin/sail artisan queue:work
+
+```
+
 
 ### Access the Application:
 
@@ -88,8 +89,13 @@ password
 # Endpoints
 
 The Endpoints documentation is available in the following link
-
+##POSTMAN COLLECTION DOC.
 https://documenter.getpostman.com/view/7413633/2s9YJgULiz
+
+
+##SWAGGER DOC.
+The swagger documentation is self hosted in this application, to access it:
+Just hit on the browser the endpoint /api/documentation
 # Recommendation
 
 If any issue arises, please do not hesitate to contact me for clarifications
