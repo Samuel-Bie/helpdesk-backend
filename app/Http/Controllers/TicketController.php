@@ -116,7 +116,7 @@ class TicketController extends Controller
 
     public function destroy(Ticket $ticket)
     {
-        if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
+        if ($ticket->user->id == request()->user()->id) {
             $ticket->delete();
             return response()->json(null, 204);
         } else {
