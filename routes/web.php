@@ -18,3 +18,6 @@ Route::get('/', function () {
         'description'=>'HelpDesk Service API'
     ];
 });
+
+
+Route::view('/api/documentation', 'swagger.index');
