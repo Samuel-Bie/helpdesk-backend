@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\TicketResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MessageResource extends JsonResource
@@ -20,6 +22,7 @@ class MessageResource extends JsonResource
             'image' => $this->image,
             'ticket_id' => $this->ticket_id,
             'sender_user_id' => $this->sender_user_id,
+            'full_ticket_info' => new TicketResource($this->whenLoaded('ticket')),
             'full_user_info' => new UserResource($this->whenLoaded('user')),
             'created_at' => $this->created_at,
             'links' => [

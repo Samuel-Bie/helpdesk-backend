@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\Message;
+use App\Jobs\MessageSent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MessageResource;
 use App\Http\Requests\StoreMessageRequest;
@@ -33,10 +34,15 @@ class MessageController extends Controller
         $message->content = $request->input('content');
         $message->image = $request->input('image');
         $message->ticket()->associate($ticket);
-        $message->sender()->associate($request->user()) ;
+        $message->sender()->associate($request->user());
         $message->save();
 
-        return response()->json(new MessageResource($message), 201);
+        // Dispatch the message sent job to The Queue Driver.
+
+        $data = (new MessageResource($message))->toJson();
+
+        MessageSent::dispatch($data);
+        return response()->json(new MessageResource($message->setRelations([])), 201);
     }
 
     /**
@@ -44,7 +50,7 @@ class MessageController extends Controller
      */
     public function show(Message $message)
     {
-        return new MessageResource($message);
+        return new MessageResource($message->load('user'));
     }
 
 
