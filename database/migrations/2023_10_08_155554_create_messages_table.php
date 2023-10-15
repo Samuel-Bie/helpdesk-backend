@@ -11,15 +11,15 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->ulid('id')->primary();
 
             $table->text('content');
             $table->text('image');
 
-            $table->unsignedBigInteger('ticket_id');
+            $table->ulid('ticket_id');
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');
 
-            $table->unsignedBigInteger('sender_user_id'); // Sender's user ID
+            $table->ulid('sender_user_id'); // Sender's user ID
             $table->foreign('sender_user_id')
                 ->references('id')
                 ->on('users'); // Reference to the "users" table

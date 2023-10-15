@@ -11,12 +11,12 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('tickets', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->ulid('id')->primary();
             $table->text('title');
             $table->longText('description')->nullable();
             $table->text('image')->nullable();
 
-            $table->unsignedBigInteger('category_id');
+            $table->ulid('category_id');
             $table->foreign('category_id')
                 ->references('id')
                 ->on('ticket_categories');
@@ -26,7 +26,7 @@ return new class () extends Migration {
             $table->text('feedback_notes')->nullable();
 
 
-            $table->unsignedBigInteger('creator_user_id')->nullable();
+            $table->ulid('creator_user_id')->nullable();
             $table->foreign('creator_user_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });

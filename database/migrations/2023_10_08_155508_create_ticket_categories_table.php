@@ -11,7 +11,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('ticket_categories', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->ulid('id')->primary();
 
             $table->string('name');
             $table->timestamps();

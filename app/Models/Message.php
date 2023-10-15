@@ -5,12 +5,15 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Ticket;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Message extends Model
 {
     use HasFactory;
+    use HasUlids;
+
 
     /**
      * Get the ticket that owns the Message
@@ -32,7 +35,8 @@ class Message extends Model
         return $this->belongsTo(User::class, 'sender_user_id');
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->sender();
     }
 }
