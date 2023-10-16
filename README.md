@@ -1,102 +1,49 @@
 
-# About HelpDesk API
-First of all thank you for giving me this opportunity, means a lot to me.
 
-This application has been developed in a WSL environment.
+ **1. **Clone on github****
+	```sh
+	git clone https://github.com/Samuel-Bie/helpdesk-backend.git
+	```
 
-The Steps of this services are described in TaskBreakDown.md file
+**2. **Install the dependencies****
 
+	```bash
+	composer  install
+	```
+**3. Configure database and the queue driver**
+To easy this process just copy the *.env.example* file to *.env*
 
-## Arch Concepts
-I created an file that displays the architecture of the application, which is located in the root of the project (arch.drawio or arch.png)
-
-## Prerequisites
-
-Make sure you have PHP, Composer, and Docker installed on your computer. Sail uses Docker to set up the development environment.
-
-Ensure you have Git installed for version control (optional but recommended).
-
-## Configuration
-This application comes with Laravel Sail inside. So after successfully clone the app
-
-### Database Configuration
-
-```
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=helpdesk_backend
-DB_USERNAME=sail
-DB_PASSWORD=password
-
-```
-
-### Install all dependencies
-
-
+ **4. Spin up the containers**
 ```bash
-composer install
+./vendor/bin/sail  up
 ```
-
-
-
-### Start Docker Containers:
-
-Sail uses Docker to run the development environment. To start the Docker containers, run the following command:
-
-
+ **5. Migrate the database and seed**
 ```bash
-./vendor/bin/sail up
-
+./vendor/bin/sail  artisan  migrate:fresh  --seed
 ```
-
-### Migrate and seed:
-The database will come with basic data
-
+ **6. Run the queue worker**
 ```bash
-./vendor/bin/sail artisan migrate:fresh --seed
-
+./vendor/bin/sail  artisan  queue:work
 ```
-
-
-### Run the queue worker
-
-```bash
-./vendor/bin/sail artisan queue:work
-
-```
-
-
-### Access the Application:
-
+ **6. Access the Application**
 Once the containers are up and running, you can access your Laravel application at http://localhost .
 
+ **7. Testing the endpoints**
 For testing in postman use the employee user
 ```
 employee.user@test.com
 password
-
 ```
-
-
 For testing in postman use the regular user
 ```
 regular.user@test.com
 password
-
 ```
-
-# Endpoints
-
-The Endpoints documentation is available in the following link
-##POSTMAN COLLECTION DOC.
+ **7. Endpoints documentation**
+--Postman documentation
+The Endpoints documentation is available in the following link (POSTMAN documentation)
 https://documenter.getpostman.com/view/7413633/2s9YJgULiz
 
-
-##SWAGGER DOC.
-The swagger documentation is self hosted in this application, to access it:
-Just hit on the browser the endpoint /api/documentation
-# Recommendation
-
-If any issue arises, please do not hesitate to contact me for clarifications
-
+-- Swagger documentation
+or after running the app the swagger documentation will be  available at:
+http://localhost/api/documentation
