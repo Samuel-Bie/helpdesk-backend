@@ -1,24 +1,12 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   title: HelpDesk BackEnd
   description: HeloHelpDesk Microservice
   version: 1.0.0
+  contact: {}
 servers:
-  - url: http://{{sever}}
+  - url: '{{sever}}'
   - url: http://localhost
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-security:
-  - bearerAuth: []
-tags:
-  - name: Authentication
-  - name: User
-  - name: Tikets
-  - name: messages
-  - name: Category
 paths:
   /api/auth/token:
     post:
@@ -28,262 +16,489 @@ paths:
       description: >-
         Backend is authenticated via Sanctum, so each user will have to reach
         this endpoint in order to have the access token
+      operationId: createToken
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example:
-                email: employee.user@test.com
-                password: password
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
+              properties:
+                password:
+                  type: string
+                  example: passwords
+            examples:
+              Create Token:
+                value:
+                  password: passwords
       responses:
         '200':
-          description: OK
+          description: Success
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:32:55 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
             Cache-Control:
               schema:
                 type: string
                 example: no-cache, private
-            Content-Type:
+            Connection:
               schema:
                 type: string
-                example: application/json
-            X-RateLimit-Limit:
+                example: close
+            Date:
               schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
+                type: string
+                example: Sun, 15 Oct 2023 11:32:55 GMT
+            Host:
               schema:
-                type: integer
-                example: '59'
+                type: string
+                example: localhost
             Vary:
               schema:
                 type: string
                 example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '59'
           content:
             application/json:
               schema:
                 type: object
-              example:
-                token: >-
-                  01hcshrkms845zdm2mrrv6q6w8|cgEd9HMBvCeXVL7BJOUse9oR0Uls50hn48pUhT5V8c284cc2
-                user:
-                  id: 01hcshrcwrrfwfn9kpc3jxbm8t
-                  name: Employee User
-                  email: employee.user@test.com
-                  email_verified_at: '2023-10-15T11:32:47.000000Z'
-                  is_employee: 1
-                  created_at: '2023-10-15T11:32:48.000000Z'
-                  updated_at: '2023-10-15T11:32:48.000000Z'
+                properties:
+                  token:
+                    type: string
+                    example: >-
+                      01hcshrkms845zdm2mrrv6q6w8|cgEd9HMBvCeXVL7BJOUse9oR0Uls50hn48pUhT5V8c284cc2
+                  user:
+                    type: object
+                    properties:
+                      created_at:
+                        type: string
+                        example: '2023-10-15T11:32:48.000000Z'
+                      email:
+                        type: string
+                        example: employee.user@test.com
+                      email_verified_at:
+                        type: string
+                        example: '2023-10-15T11:32:47.000000Z'
+                      id:
+                        type: string
+                        example: 01hcshrcwrrfwfn9kpc3jxbm8t
+                      is_employee:
+                        type: number
+                        example: 1
+                      name:
+                        type: string
+                        example: Employee User
+                      updated_at:
+                        type: string
+                        example: '2023-10-15T11:32:48.000000Z'
+              examples:
+                Success:
+                  value:
+                    token: >-
+                      01hcshrkms845zdm2mrrv6q6w8|cgEd9HMBvCeXVL7BJOUse9oR0Uls50hn48pUhT5V8c284cc2
+                    user:
+                      created_at: '2023-10-15T11:32:48.000000Z'
+                      email: employee.user@test.com
+                      email_verified_at: '2023-10-15T11:32:47.000000Z'
+                      id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                      is_employee: 1
+                      name: Employee User
+                      updated_at: '2023-10-15T11:32:48.000000Z'
+        '401':
+          description: Invalid Credentials
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Connection:
+              schema:
+                type: string
+                example: close
+            Date:
+              schema:
+                type: string
+                example: Sun, 15 Oct 2023 23:28:18 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '58'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid login credentials.
+              examples:
+                Invalid Credentials:
+                  value:
+                    message: Invalid login credentials.
+        '422':
+          description: Missing field
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Connection:
+              schema:
+                type: string
+                example: close
+            Date:
+              schema:
+                type: string
+                example: Sun, 15 Oct 2023 23:29:08 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '57'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        items:
+                          type: string
+                          example: The email field is required.
+                        example:
+                          - The email field is required.
+                  message:
+                    type: string
+                    example: The email field is required.
+              examples:
+                Missing field:
+                  value:
+                    errors:
+                      email:
+                        - The email field is required.
+                    message: The email field is required.
   /api/auth/whoami:
     get:
       tags:
         - Authentication
       summary: whoami
       description: Basically this returns all the authenticated user information
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
+      operationId: whoami
       responses:
         '200':
-          description: OK
+          description: Success
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:34:10 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
             Cache-Control:
               schema:
                 type: string
                 example: no-cache, private
-            Content-Type:
+            Connection:
               schema:
                 type: string
-                example: application/json
-            X-RateLimit-Limit:
+                example: close
+            Date:
               schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
+                type: string
+                example: Sun, 15 Oct 2023 11:34:10 GMT
+            Host:
               schema:
-                type: integer
-                example: '59'
+                type: string
+                example: localhost
             Vary:
               schema:
                 type: string
                 example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '59'
           content:
             application/json:
               schema:
                 type: object
-              example:
-                user:
-                  id: 01hcshrcwrrfwfn9kpc3jxbm8t
-                  name: Employee User
-                  email: employee.user@test.com
-                  email_verified_at: '2023-10-15T11:32:47.000000Z'
-                  is_employee: 1
-                  created_at: '2023-10-15T11:32:48.000000Z'
-                  updated_at: '2023-10-15T11:32:48.000000Z'
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      created_at:
+                        type: string
+                        example: '2023-10-15T11:32:48.000000Z'
+                      email:
+                        type: string
+                        example: employee.user@test.com
+                      email_verified_at:
+                        type: string
+                        example: '2023-10-15T11:32:47.000000Z'
+                      id:
+                        type: string
+                        example: 01hcshrcwrrfwfn9kpc3jxbm8t
+                      is_employee:
+                        type: number
+                        example: 1
+                      name:
+                        type: string
+                        example: Employee User
+                      updated_at:
+                        type: string
+                        example: '2023-10-15T11:32:48.000000Z'
+              examples:
+                Success:
+                  value:
+                    user:
+                      created_at: '2023-10-15T11:32:48.000000Z'
+                      email: employee.user@test.com
+                      email_verified_at: '2023-10-15T11:32:47.000000Z'
+                      id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                      is_employee: 1
+                      name: Employee User
+                      updated_at: '2023-10-15T11:32:48.000000Z'
+        '401':
+          description: No Bearer
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Connection:
+              schema:
+                type: string
+                example: close
+            Date:
+              schema:
+                type: string
+                example: Sun, 15 Oct 2023 23:30:15 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+              examples:
+                No Bearer:
+                  value:
+                    message: Unauthenticated.
   /api/auth/logout:
     post:
       tags:
         - Authentication
       summary: logout
       description: Logout , or cancel the current used access token
-      requestBody:
-        content: {}
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
+      operationId: logout
       responses:
         '204':
-          description: No Content
+          description: Success
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:34:28 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
             Cache-Control:
               schema:
                 type: string
                 example: no-cache, private
-            X-RateLimit-Limit:
+            Connection:
               schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
+                type: string
+                example: close
+            Date:
               schema:
-                type: integer
-                example: '58'
+                type: string
+                example: Sun, 15 Oct 2023 11:34:28 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
             Vary:
               schema:
                 type: string
                 example: Origin
-          content:
-            text/plain:
+            X-Powered-By:
               schema:
                 type: string
-              example: null
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '58'
+          content: {}
   /api/users/01hcshrd35t1bzf856j0e2ep5s:
     get:
       tags:
         - User
       summary: Show
       description: Show essancial user information for any user of the application
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
+      operationId: show
       responses:
         '200':
-          description: OK
+          description: Success
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:49:19 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
             Cache-Control:
               schema:
                 type: string
                 example: no-cache, private
-            Content-Type:
+            Connection:
               schema:
                 type: string
-                example: application/json
-            X-RateLimit-Limit:
+                example: close
+            Date:
               schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
+                type: string
+                example: Sun, 15 Oct 2023 11:49:19 GMT
+            Host:
               schema:
-                type: integer
-                example: '58'
+                type: string
+                example: localhost
             Vary:
               schema:
                 type: string
                 example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '58'
           content:
             application/json:
               schema:
                 type: object
-              example:
-                id: 01hcshrd35t1bzf856j0e2ep5s
-                name: Regular User
-                email: regular.user@test.com
-                is_employee: 0
+                properties:
+                  email:
+                    type: string
+                    example: regular.user@test.com
+                  id:
+                    type: string
+                    example: 01hcshrd35t1bzf856j0e2ep5s
+                  is_employee:
+                    type: number
+                    example: 0
+                  name:
+                    type: string
+                    example: Regular User
+              examples:
+                Success:
+                  value:
+                    email: regular.user@test.com
+                    id: 01hcshrd35t1bzf856j0e2ep5s
+                    is_employee: 0
+                    name: Regular User
+        '404':
+          description: Invalid User
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Connection:
+              schema:
+                type: string
+                example: close
+            Date:
+              schema:
+                type: string
+                example: Sun, 15 Oct 2023 23:31:46 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '58'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Resource not found
+              examples:
+                Invalid User:
+                  value:
+                    message: Resource not found
   /api/tickets:
     get:
       tags:
@@ -292,1049 +507,2011 @@ paths:
       description: >-
         Listing of alll the tickets in the application, we can use or filter by
         status, category or by priority
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
-      responses:
-        '200':
-          description: OK
-          headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:35:28 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, private
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            X-RateLimit-Limit:
-              schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
-              schema:
-                type: integer
-                example: '58'
-            Vary:
-              schema:
-                type: string
-                example: Origin
-          content:
-            application/json:
-              schema:
-                type: object
-              example:
-                data:
-                  - id: 01hcshrdfrnmnzkcrmpcarx4br
-                    title: Adipisci quia dicta et eveniet error aut autem molestiae.
-                    description: >-
-                      Laudantium qui similique magni nostrum aut ipsam. Eius
-                      rerum veritatis tempore dignissimos. Quis unde a unde et
-                      unde.
-                    image: https://via.placeholder.com/640x480.png/00ffff?text=totam
-                    category:
-                      id: 01hcshrdf35vv9tg2bxx4kvp9j
-                      name: Doubts
-                    status: closed
-                    priority: low
-                    feedback_notes: >-
-                      Ipsam tempora tempora est totam quasi est iure. Sapiente
-                      possimus magnam qui eos aspernatur voluptatem quasi. Sed
-                      sed et id dolorum numquam amet aspernatur iste. Quam
-                      consequuntur commodi aut quia.
-                    creator_user_id: 01hcshrde4zp74eez98qvbbygd
-                    links:
-                      self: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
-                      messages: >-
-                        http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
-                  - id: 01hcshrdg191vhy69e5hc0egsk
-                    title: Labore quis aperiam reiciendis nobis nihil dolorum.
-                    description: >-
-                      Ullam sed voluptas asperiores unde. Quae dolor provident
-                      dolorum rerum atque hic et. Quos atque reprehenderit
-                      libero officia temporibus provident. Eveniet modi omnis in
-                      placeat provident velit.
-                    image: https://via.placeholder.com/640x480.png/00aa33?text=sunt
-                    category:
-                      id: 01hcshrdevwp7y426djk1vaxsa
-                      name: Financial
-                    status: in progress
-                    priority: medium
-                    feedback_notes: >-
-                      Quia voluptate adipisci odit ducimus distinctio. Quas ex
-                      odit est eos. Molestiae iste sed quod consequatur.
-                    creator_user_id: 01hcshrde4zp74eez98qvbbygd
-                    links:
-                      self: http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
-                      messages: >-
-                        http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk/messages
-                  - id: 01hcshrdg793mq1ys624q7yyx0
-                    title: In commodi voluptatem qui illum earum.
-                    description: >-
-                      Nihil illo iure sit eum in corporis consequatur. Eos velit
-                      similique ratione similique atque. Iste debitis magnam
-                      sequi voluptatem.
-                    image: >-
-                      https://via.placeholder.com/640x480.png/00ee00?text=voluptatem
-                    category:
-                      id: 01hcshrdevwp7y426djk1vaxsa
-                      name: Financial
-                    status: in progress
-                    priority: low
-                    feedback_notes: >-
-                      Dicta accusantium odit doloremque animi. Nulla recusandae
-                      molestiae non et. Maiores quasi tempora qui assumenda aut.
-                      Omnis ut vitae deleniti consectetur praesentium in
-                      doloribus.
-                    creator_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
-                    links:
-                      self: http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
-                      messages: >-
-                        http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0/messages
-    post:
-      tags:
-        - Tikets
-      summary: Create
-      description: Create a ticket in the database
+      operationId: index
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example:
-                title: New Ticket
-                description: This is a new ticket description
-                image: ticket_image_url.jpg
-                category: 01hcshrdej13858f0p2awwws2j
-                status: open
-                priority: high
-                feedback_notes: Feedback for the ticket
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
+              properties:
+                category_id:
+                  type: string
+                  example: 01hcshrdevwp7y426djk1vaxsa
+                priority:
+                  type: string
+                  example: high
+                status:
+                  type: string
+                  example: closed
+
       responses:
-        '201':
-          description: Created
+        '200':
+          description: Index
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:37:50 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
             Cache-Control:
               schema:
                 type: string
                 example: no-cache, private
-            Content-Type:
+            Connection:
               schema:
                 type: string
-                example: application/json
-            X-RateLimit-Limit:
+                example: close
+            Date:
               schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
+                type: string
+                example: Sun, 15 Oct 2023 11:35:28 GMT
+            Host:
               schema:
-                type: integer
-                example: '59'
+                type: string
+                example: localhost
             Vary:
               schema:
                 type: string
                 example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '58'
           content:
             application/json:
               schema:
                 type: object
-              example:
-                id: 01hcsj1m4b6kyt2vhtz7vtkhyw
-                title: New Ticket
-                description: This is a new ticket description
-                image: ticket_image_url.jpg
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        category:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 01hcshrdf35vv9tg2bxx4kvp9j
+                            name:
+                              type: string
+                              example: Doubts
+                        creator_user_id:
+                          type: string
+                          example: 01hcshrde4zp74eez98qvbbygd
+                        description:
+                          type: string
+                          example: >-
+                            Laudantium qui similique magni nostrum aut ipsam.
+                            Eius rerum veritatis tempore dignissimos. Quis unde
+                            a unde et unde.
+                        feedback_notes:
+                          type: string
+                          example: >-
+                            Ipsam tempora tempora est totam quasi est iure.
+                            Sapiente possimus magnam qui eos aspernatur
+                            voluptatem quasi. Sed sed et id dolorum numquam amet
+                            aspernatur iste. Quam consequuntur commodi aut quia.
+                        id:
+                          type: string
+                          example: 01hcshrdfrnmnzkcrmpcarx4br
+                        image:
+                          type: string
+                          example: >-
+                            https://via.placeholder.com/640x480.png/00ffff?text=totam
+                        links:
+                          type: object
+                          properties:
+                            messages:
+                              type: string
+                              example: >-
+                                http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
+                            self:
+                              type: string
+                              example: >-
+                                http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        priority:
+                          type: string
+                          example: low
+                        status:
+                          type: string
+                          example: closed
+                        title:
+                          type: string
+                          example: >-
+                            Adipisci quia dicta et eveniet error aut autem
+                            molestiae.
+                    example:
+                      - category:
+                          id: 01hcshrdf35vv9tg2bxx4kvp9j
+                          name: Doubts
+                        creator_user_id: 01hcshrde4zp74eez98qvbbygd
+                        description: >-
+                          Laudantium qui similique magni nostrum aut ipsam. Eius
+                          rerum veritatis tempore dignissimos. Quis unde a unde
+                          et unde.
+                        feedback_notes: >-
+                          Ipsam tempora tempora est totam quasi est iure.
+                          Sapiente possimus magnam qui eos aspernatur voluptatem
+                          quasi. Sed sed et id dolorum numquam amet aspernatur
+                          iste. Quam consequuntur commodi aut quia.
+                        id: 01hcshrdfrnmnzkcrmpcarx4br
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ffff?text=totam
+                        links:
+                          messages: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
+                          self: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        priority: low
+                        status: closed
+                        title: >-
+                          Adipisci quia dicta et eveniet error aut autem
+                          molestiae.
+                      - category:
+                          id: 01hcshrdevwp7y426djk1vaxsa
+                          name: Financial
+                        creator_user_id: 01hcshrde4zp74eez98qvbbygd
+                        description: >-
+                          Ullam sed voluptas asperiores unde. Quae dolor
+                          provident dolorum rerum atque hic et. Quos atque
+                          reprehenderit libero officia temporibus provident.
+                          Eveniet modi omnis in placeat provident velit.
+                        feedback_notes: >-
+                          Quia voluptate adipisci odit ducimus distinctio. Quas
+                          ex odit est eos. Molestiae iste sed quod consequatur.
+                        id: 01hcshrdg191vhy69e5hc0egsk
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00aa33?text=sunt
+                        links:
+                          messages: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk/messages
+                          self: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        priority: medium
+                        status: in progress
+                        title: Labore quis aperiam reiciendis nobis nihil dolorum.
+                      - category:
+                          id: 01hcshrdevwp7y426djk1vaxsa
+                          name: Financial
+                        creator_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                        description: >-
+                          Nihil illo iure sit eum in corporis consequatur. Eos
+                          velit similique ratione similique atque. Iste debitis
+                          magnam sequi voluptatem.
+                        feedback_notes: >-
+                          Dicta accusantium odit doloremque animi. Nulla
+                          recusandae molestiae non et. Maiores quasi tempora qui
+                          assumenda aut. Omnis ut vitae deleniti consectetur
+                          praesentium in doloribus.
+                        id: 01hcshrdg793mq1ys624q7yyx0
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ee00?text=voluptatem
+                        links:
+                          messages: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0/messages
+                          self: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        priority: low
+                        status: in progress
+                        title: In commodi voluptatem qui illum earum.
+              examples:
+                Index:
+                  value:
+                    data:
+                      - category:
+                          id: 01hcshrdf35vv9tg2bxx4kvp9j
+                          name: Doubts
+                        creator_user_id: 01hcshrde4zp74eez98qvbbygd
+                        description: >-
+                          Laudantium qui similique magni nostrum aut ipsam. Eius
+                          rerum veritatis tempore dignissimos. Quis unde a unde
+                          et unde.
+                        feedback_notes: >-
+                          Ipsam tempora tempora est totam quasi est iure.
+                          Sapiente possimus magnam qui eos aspernatur voluptatem
+                          quasi. Sed sed et id dolorum numquam amet aspernatur
+                          iste. Quam consequuntur commodi aut quia.
+                        id: 01hcshrdfrnmnzkcrmpcarx4br
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ffff?text=totam
+                        links:
+                          messages: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
+                          self: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        priority: low
+                        status: closed
+                        title: >-
+                          Adipisci quia dicta et eveniet error aut autem
+                          molestiae.
+                      - category:
+                          id: 01hcshrdevwp7y426djk1vaxsa
+                          name: Financial
+                        creator_user_id: 01hcshrde4zp74eez98qvbbygd
+                        description: >-
+                          Ullam sed voluptas asperiores unde. Quae dolor
+                          provident dolorum rerum atque hic et. Quos atque
+                          reprehenderit libero officia temporibus provident.
+                          Eveniet modi omnis in placeat provident velit.
+                        feedback_notes: >-
+                          Quia voluptate adipisci odit ducimus distinctio. Quas
+                          ex odit est eos. Molestiae iste sed quod consequatur.
+                        id: 01hcshrdg191vhy69e5hc0egsk
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00aa33?text=sunt
+                        links:
+                          messages: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk/messages
+                          self: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        priority: medium
+                        status: in progress
+                        title: Labore quis aperiam reiciendis nobis nihil dolorum.
+                      - category:
+                          id: 01hcshrdevwp7y426djk1vaxsa
+                          name: Financial
+                        creator_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                        description: >-
+                          Nihil illo iure sit eum in corporis consequatur. Eos
+                          velit similique ratione similique atque. Iste debitis
+                          magnam sequi voluptatem.
+                        feedback_notes: >-
+                          Dicta accusantium odit doloremque animi. Nulla
+                          recusandae molestiae non et. Maiores quasi tempora qui
+                          assumenda aut. Omnis ut vitae deleniti consectetur
+                          praesentium in doloribus.
+                        id: 01hcshrdg793mq1ys624q7yyx0
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ee00?text=voluptatem
+                        links:
+                          messages: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0/messages
+                          self: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        priority: low
+                        status: in progress
+                        title: In commodi voluptatem qui illum earum.
+    post:
+      tags:
+        - Tikets
+      summary: Create
+      description: Create a ticket in the database
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
                 category:
-                  id: 01hcshrdej13858f0p2awwws2j
-                  name: Technical support
-                status: open
-                priority: high
-                feedback_notes: Feedback for the ticket
-                creator_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
-                links:
-                  self: http://localhost/api/tickets/01hcsj1m4b6kyt2vhtz7vtkhyw
-                  messages: >-
-                    http://localhost/api/tickets/01hcsj1m4b6kyt2vhtz7vtkhyw/messages
+                  type: string
+                  example: 01hcshrdej13858f0p2awwws2j
+                description:
+                  type: string
+                  example: This is a new ticket description
+                feedback_notes:
+                  type: string
+                  example: Feedback for the ticket
+                image:
+                  type: string
+                  example: ticket_image_url.jpg
+                priority:
+                  type: string
+                  example: high
+                status:
+                  type: string
+                  example: open
+                title:
+                  type: string
+                  example: New Ticket
+      responses:
+        '201':
+          description: Success
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Connection:
+              schema:
+                type: string
+                example: close
+            Date:
+              schema:
+                type: string
+                example: Sun, 15 Oct 2023 11:37:50 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '59'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01hcshrdej13858f0p2awwws2j
+                      name:
+                        type: string
+                        example: Technical support
+                  creator_user_id:
+                    type: string
+                    example: 01hcshrcwrrfwfn9kpc3jxbm8t
+                  description:
+                    type: string
+                    example: This is a new ticket description
+                  feedback_notes:
+                    type: string
+                    example: Feedback for the ticket
+                  id:
+                    type: string
+                    example: 01hcsj1m4b6kyt2vhtz7vtkhyw
+                  image:
+                    type: string
+                    example: ticket_image_url.jpg
+                  links:
+                    type: object
+                    properties:
+                      messages:
+                        type: string
+                        example: >-
+                          http://localhost/api/tickets/01hcsj1m4b6kyt2vhtz7vtkhyw/messages
+                      self:
+                        type: string
+                        example: >-
+                          http://localhost/api/tickets/01hcsj1m4b6kyt2vhtz7vtkhyw
+                  priority:
+                    type: string
+                    example: high
+                  status:
+                    type: string
+                    example: open
+                  title:
+                    type: string
+                    example: New Ticket
+              examples:
+                Success:
+                  value:
+                    category:
+                      id: 01hcshrdej13858f0p2awwws2j
+                      name: Technical support
+                    creator_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                    description: This is a new ticket description
+                    feedback_notes: Feedback for the ticket
+                    id: 01hcsj1m4b6kyt2vhtz7vtkhyw
+                    image: ticket_image_url.jpg
+                    links:
+                      messages: >-
+                        http://localhost/api/tickets/01hcsj1m4b6kyt2vhtz7vtkhyw/messages
+                      self: http://localhost/api/tickets/01hcsj1m4b6kyt2vhtz7vtkhyw
+                    priority: high
+                    status: open
+                    title: New Ticket
+        '422':
+          description: Missing fields
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Connection:
+              schema:
+                type: string
+                example: close
+            Date:
+              schema:
+                type: string
+                example: Sun, 15 Oct 2023 23:36:05 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '58'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      title:
+                        type: array
+                        items:
+                          type: string
+                          example: The title field is required.
+                        example:
+                          - The title field is required.
+                  message:
+                    type: string
+                    example: The title field is required.
+              examples:
+                Missing fields:
+                  value:
+                    errors:
+                      title:
+                        - The title field is required.
+                    message: The title field is required.
   /api/tickets/01hcshrdfrnmnzkcrmpcarx4br:
     get:
       tags:
         - Tikets
       summary: Show
       description: Show a ticket
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
+      operationId: show1
       responses:
         '200':
-          description: OK
+          description: Show
           headers:
-            Host:
+            Cache-Control:
               schema:
                 type: string
-                example: localhost
+                example: no-cache, private
+            Connection:
+              schema:
+                type: string
+                example: close
             Date:
               schema:
                 type: string
                 example: Sun, 15 Oct 2023 11:36:24 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, private
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            X-RateLimit-Limit:
-              schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
-              schema:
-                type: integer
-                example: '59'
-            Vary:
-              schema:
-                type: string
-                example: Origin
-          content:
-            application/json:
-              schema:
-                type: object
-              example:
-                id: 01hcshrdfrnmnzkcrmpcarx4br
-                title: Adipisci quia dicta et eveniet error aut autem molestiae.
-                description: >-
-                  Laudantium qui similique magni nostrum aut ipsam. Eius rerum
-                  veritatis tempore dignissimos. Quis unde a unde et unde.
-                image: https://via.placeholder.com/640x480.png/00ffff?text=totam
-                category:
-                  id: 01hcshrdf35vv9tg2bxx4kvp9j
-                  name: Doubts
-                status: closed
-                priority: low
-                feedback_notes: >-
-                  Ipsam tempora tempora est totam quasi est iure. Sapiente
-                  possimus magnam qui eos aspernatur voluptatem quasi. Sed sed
-                  et id dolorum numquam amet aspernatur iste. Quam consequuntur
-                  commodi aut quia.
-                creator_user_id: 01hcshrde4zp74eez98qvbbygd
-                links:
-                  self: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
-                  messages: >-
-                    http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
-    put:
-      tags:
-        - Tikets
-      summary: Update
-      description: Update the ticket
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                title: updated Ticket
-                description: updayed This is a new ticket description
-                image: ticket_image_url.jpg
-                category: 01hcshrdevwp7y426djk1vaxsa
-                status: closed
-                priority: high
-                feedback_notes: Feedback for the ticket
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
-      responses:
-        '202':
-          description: Accepted
-          headers:
             Host:
               schema:
                 type: string
                 example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:40:28 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, private
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            X-RateLimit-Limit:
-              schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
-              schema:
-                type: integer
-                example: '58'
             Vary:
               schema:
                 type: string
                 example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '59'
           content:
             application/json:
               schema:
                 type: object
-              example:
-                id: 01hcshrdfrnmnzkcrmpcarx4br
-                title: updated Ticket
-                description: updayed This is a new ticket description
-                image: ticket_image_url.jpg
-                category:
-                  id: 01hcshrdevwp7y426djk1vaxsa
-                  name: Financial
-                status: closed
-                priority: high
-                feedback_notes: Feedback for the ticket
-                creator_user_id: 01hcshrde4zp74eez98qvbbygd
-                links:
-                  self: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
-                  messages: >-
-                    http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
+                properties:
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01hcshrdf35vv9tg2bxx4kvp9j
+                      name:
+                        type: string
+                        example: Doubts
+                  creator_user_id:
+                    type: string
+                    example: 01hcshrde4zp74eez98qvbbygd
+                  description:
+                    type: string
+                    example: >-
+                      Laudantium qui similique magni nostrum aut ipsam. Eius
+                      rerum veritatis tempore dignissimos. Quis unde a unde et
+                      unde.
+                  feedback_notes:
+                    type: string
+                    example: >-
+                      Ipsam tempora tempora est totam quasi est iure. Sapiente
+                      possimus magnam qui eos aspernatur voluptatem quasi. Sed
+                      sed et id dolorum numquam amet aspernatur iste. Quam
+                      consequuntur commodi aut quia.
+                  id:
+                    type: string
+                    example: 01hcshrdfrnmnzkcrmpcarx4br
+                  image:
+                    type: string
+                    example: https://via.placeholder.com/640x480.png/00ffff?text=totam
+                  links:
+                    type: object
+                    properties:
+                      messages:
+                        type: string
+                        example: >-
+                          http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
+                      self:
+                        type: string
+                        example: >-
+                          http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                  priority:
+                    type: string
+                    example: low
+                  status:
+                    type: string
+                    example: closed
+                  title:
+                    type: string
+                    example: Adipisci quia dicta et eveniet error aut autem molestiae.
+              examples:
+                Show:
+                  value:
+                    category:
+                      id: 01hcshrdf35vv9tg2bxx4kvp9j
+                      name: Doubts
+                    creator_user_id: 01hcshrde4zp74eez98qvbbygd
+                    description: >-
+                      Laudantium qui similique magni nostrum aut ipsam. Eius
+                      rerum veritatis tempore dignissimos. Quis unde a unde et
+                      unde.
+                    feedback_notes: >-
+                      Ipsam tempora tempora est totam quasi est iure. Sapiente
+                      possimus magnam qui eos aspernatur voluptatem quasi. Sed
+                      sed et id dolorum numquam amet aspernatur iste. Quam
+                      consequuntur commodi aut quia.
+                    id: 01hcshrdfrnmnzkcrmpcarx4br
+                    image: https://via.placeholder.com/640x480.png/00ffff?text=totam
+                    links:
+                      messages: >-
+                        http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
+                      self: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                    priority: low
+                    status: closed
+                    title: Adipisci quia dicta et eveniet error aut autem molestiae.
     delete:
       tags:
         - Tikets
       summary: Delete
       description: Delete the ticket
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
+      operationId: delete
       responses:
         '204':
-          description: No Content
+          description: Delete
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Mon, 09 Oct 2023 00:52:59 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, private
-            X-RateLimit-Limit:
-              schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
-              schema:
-                type: integer
-                example: '56'
             Access-Control-Allow-Origin:
               schema:
                 type: string
                 example: '*'
-          content:
-            text/plain:
+            Cache-Control:
               schema:
                 type: string
-              example: null
+                example: no-cache, private
+            Connection:
+              schema:
+                type: string
+                example: close
+            Date:
+              schema:
+                type: string
+                example: Mon, 09 Oct 2023 00:52:59 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '56'
+          content: {}
   /api/tickets/01hcshrdfrnmnzkcrmpcarx4br/history:
     get:
       tags:
         - Tikets
       summary: History
       description: Show a ticket with its full history.
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
+      operationId: history
       responses:
         '200':
-          description: OK
+          description: History
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:39:22 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
             Cache-Control:
               schema:
                 type: string
                 example: no-cache, private
-            Content-Type:
+            Connection:
               schema:
                 type: string
-                example: application/json
-            X-RateLimit-Limit:
+                example: close
+            Date:
               schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
+                type: string
+                example: Sun, 15 Oct 2023 11:39:22 GMT
+            Host:
               schema:
-                type: integer
-                example: '58'
+                type: string
+                example: localhost
             Vary:
               schema:
                 type: string
                 example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '58'
           content:
             application/json:
               schema:
                 type: object
-              example:
-                id: 01hcshrdfrnmnzkcrmpcarx4br
-                title: Adipisci quia dicta et eveniet error aut autem molestiae.
-                description: >-
-                  Laudantium qui similique magni nostrum aut ipsam. Eius rerum
-                  veritatis tempore dignissimos. Quis unde a unde et unde.
-                image: https://via.placeholder.com/640x480.png/00ffff?text=totam
-                category:
-                  id: 01hcshrdf35vv9tg2bxx4kvp9j
-                  name: Doubts
-                status: closed
-                priority: low
-                feedback_notes: >-
-                  Ipsam tempora tempora est totam quasi est iure. Sapiente
-                  possimus magnam qui eos aspernatur voluptatem quasi. Sed sed
-                  et id dolorum numquam amet aspernatur iste. Quam consequuntur
-                  commodi aut quia.
-                creator_user_id: 01hcshrde4zp74eez98qvbbygd
-                messages:
-                  - id: 01hcshrdh0vt3xwn0j921482xt
-                    content: >-
-                      Aliquam minus temporibus dolorem ducimus voluptas. Labore
-                      recusandae magni aperiam corporis. Nam similique
-                      laboriosam quisquam laboriosam sed.
-                    image: >-
-                      https://via.placeholder.com/640x480.png/002233?text=dignissimos
-                    ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
-                    sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
-                    full_user_info:
-                      id: 01hcshrd35t1bzf856j0e2ep5s
-                      name: Regular User
-                      email: regular.user@test.com
-                      is_employee: 0
-                    created_at: '2023-10-15T11:32:48.000000Z'
+                properties:
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01hcshrdf35vv9tg2bxx4kvp9j
+                      name:
+                        type: string
+                        example: Doubts
+                  creator_user_id:
+                    type: string
+                    example: 01hcshrde4zp74eez98qvbbygd
+                  description:
+                    type: string
+                    example: >-
+                      Laudantium qui similique magni nostrum aut ipsam. Eius
+                      rerum veritatis tempore dignissimos. Quis unde a unde et
+                      unde.
+                  feedback_notes:
+                    type: string
+                    example: >-
+                      Ipsam tempora tempora est totam quasi est iure. Sapiente
+                      possimus magnam qui eos aspernatur voluptatem quasi. Sed
+                      sed et id dolorum numquam amet aspernatur iste. Quam
+                      consequuntur commodi aut quia.
+                  id:
+                    type: string
+                    example: 01hcshrdfrnmnzkcrmpcarx4br
+                  image:
+                    type: string
+                    example: https://via.placeholder.com/640x480.png/00ffff?text=totam
+                  links:
+                    type: object
+                    properties:
+                      messages:
+                        type: string
+                        example: >-
+                          http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
+                      self:
+                        type: string
+                        example: >-
+                          http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        content:
+                          type: string
+                          example: >-
+                            Aliquam minus temporibus dolorem ducimus voluptas.
+                            Labore recusandae magni aperiam corporis. Nam
+                            similique laboriosam quisquam laboriosam sed.
+                        created_at:
+                          type: string
+                          example: '2023-10-15T11:32:48.000000Z'
+                        full_user_info:
+                          type: object
+                          properties:
+                            email:
+                              type: string
+                              example: regular.user@test.com
+                            id:
+                              type: string
+                              example: 01hcshrd35t1bzf856j0e2ep5s
+                            is_employee:
+                              type: number
+                              example: 0
+                            name:
+                              type: string
+                              example: Regular User
+                        id:
+                          type: string
+                          example: 01hcshrdh0vt3xwn0j921482xt
+                        image:
+                          type: string
+                          example: >-
+                            https://via.placeholder.com/640x480.png/002233?text=dignissimos
+                        links:
+                          type: object
+                          properties:
+                            self:
+                              type: string
+                              example: >-
+                                http://localhost/api/messages/01hcshrdh0vt3xwn0j921482xt
+                            ticket:
+                              type: string
+                              example: >-
+                                http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        sender_user_id:
+                          type: string
+                          example: 01hcshrd35t1bzf856j0e2ep5s
+                        ticket_id:
+                          type: string
+                          example: 01hcshrdfrnmnzkcrmpcarx4br
+                    example:
+                      - content: >-
+                          Aliquam minus temporibus dolorem ducimus voluptas.
+                          Labore recusandae magni aperiam corporis. Nam
+                          similique laboriosam quisquam laboriosam sed.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        full_user_info:
+                          email: regular.user@test.com
+                          id: 01hcshrd35t1bzf856j0e2ep5s
+                          is_employee: 0
+                          name: Regular User
+                        id: 01hcshrdh0vt3xwn0j921482xt
+                        image: >-
+                          https://via.placeholder.com/640x480.png/002233?text=dignissimos
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdh0vt3xwn0j921482xt
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
+                        ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
+                      - content: >-
+                          Odit aut soluta iure voluptatem. Et sint explicabo
+                          dolor.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        full_user_info:
+                          email: employee.user@test.com
+                          id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                          is_employee: 1
+                          name: Employee User
+                        id: 01hcshrdh962wn4f1740cbdwj4
+                        image: >-
+                          https://via.placeholder.com/640x480.png/005555?text=dolor
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdh962wn4f1740cbdwj4
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        sender_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                        ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
+                      - content: >-
+                          Quia tempora sit soluta voluptatem in aliquid incidunt
+                          recusandae. Ratione ullam odit minus assumenda animi
+                          natus. Earum dolor cumque ad rerum qui culpa deserunt.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        full_user_info:
+                          email: tina.heaney@example.com
+                          id: 01hcshrde4zp74eez98qvbbygd
+                          is_employee: 0
+                          name: Brielle Dicki
+                        id: 01hcshrdhjfej5fffwrd7y0fea
+                        image: >-
+                          https://via.placeholder.com/640x480.png/004477?text=sed
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdhjfej5fffwrd7y0fea
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        sender_user_id: 01hcshrde4zp74eez98qvbbygd
+                        ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
+                      - content: >-
+                          Odio est vel aspernatur. Corporis dolorum quia maiores
+                          assumenda molestias. Quidem ut dicta ipsum tempora in.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        full_user_info:
+                          email: regular.user@test.com
+                          id: 01hcshrd35t1bzf856j0e2ep5s
+                          is_employee: 0
+                          name: Regular User
+                        id: 01hcshrdhtk0ec80ja8nj66rvm
+                        image: >-
+                          https://via.placeholder.com/640x480.png/0055bb?text=non
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdhtk0ec80ja8nj66rvm
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
+                        ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
+                      - content: >-
+                          Ipsa perferendis in in unde quia necessitatibus
+                          voluptatem possimus. At excepturi quia quis eum. Totam
+                          consequatur ipsum ipsa animi rerum non est.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        full_user_info:
+                          email: jamir.becker@example.com
+                          id: 01hcshrdebeg92ybac7a0vdfr5
+                          is_employee: 1
+                          name: Elenora Dickinson
+                        id: 01hcshrdj3xa1fcv0jvfs5zb67
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ddbb?text=sit
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdj3xa1fcv0jvfs5zb67
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
+                  priority:
+                    type: string
+                    example: low
+                  status:
+                    type: string
+                    example: closed
+                  title:
+                    type: string
+                    example: Adipisci quia dicta et eveniet error aut autem molestiae.
+              examples:
+                History:
+                  value:
+                    category:
+                      id: 01hcshrdf35vv9tg2bxx4kvp9j
+                      name: Doubts
+                    creator_user_id: 01hcshrde4zp74eez98qvbbygd
+                    description: >-
+                      Laudantium qui similique magni nostrum aut ipsam. Eius
+                      rerum veritatis tempore dignissimos. Quis unde a unde et
+                      unde.
+                    feedback_notes: >-
+                      Ipsam tempora tempora est totam quasi est iure. Sapiente
+                      possimus magnam qui eos aspernatur voluptatem quasi. Sed
+                      sed et id dolorum numquam amet aspernatur iste. Quam
+                      consequuntur commodi aut quia.
+                    id: 01hcshrdfrnmnzkcrmpcarx4br
+                    image: https://via.placeholder.com/640x480.png/00ffff?text=totam
                     links:
-                      self: http://localhost/api/messages/01hcshrdh0vt3xwn0j921482xt
-                      ticket: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
-                  - id: 01hcshrdh962wn4f1740cbdwj4
-                    content: Odit aut soluta iure voluptatem. Et sint explicabo dolor.
-                    image: https://via.placeholder.com/640x480.png/005555?text=dolor
-                    ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
-                    sender_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
-                    full_user_info:
-                      id: 01hcshrcwrrfwfn9kpc3jxbm8t
-                      name: Employee User
-                      email: employee.user@test.com
-                      is_employee: 1
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdh962wn4f1740cbdwj4
-                      ticket: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
-                  - id: 01hcshrdhjfej5fffwrd7y0fea
-                    content: >-
-                      Quia tempora sit soluta voluptatem in aliquid incidunt
-                      recusandae. Ratione ullam odit minus assumenda animi
-                      natus. Earum dolor cumque ad rerum qui culpa deserunt.
-                    image: https://via.placeholder.com/640x480.png/004477?text=sed
-                    ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
-                    sender_user_id: 01hcshrde4zp74eez98qvbbygd
-                    full_user_info:
-                      id: 01hcshrde4zp74eez98qvbbygd
-                      name: Brielle Dicki
-                      email: tina.heaney@example.com
-                      is_employee: 0
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdhjfej5fffwrd7y0fea
-                      ticket: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
-                  - id: 01hcshrdhtk0ec80ja8nj66rvm
-                    content: >-
-                      Odio est vel aspernatur. Corporis dolorum quia maiores
-                      assumenda molestias. Quidem ut dicta ipsum tempora in.
-                    image: https://via.placeholder.com/640x480.png/0055bb?text=non
-                    ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
-                    sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
-                    full_user_info:
-                      id: 01hcshrd35t1bzf856j0e2ep5s
-                      name: Regular User
-                      email: regular.user@test.com
-                      is_employee: 0
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdhtk0ec80ja8nj66rvm
-                      ticket: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
-                  - id: 01hcshrdj3xa1fcv0jvfs5zb67
-                    content: >-
-                      Ipsa perferendis in in unde quia necessitatibus voluptatem
-                      possimus. At excepturi quia quis eum. Totam consequatur
-                      ipsum ipsa animi rerum non est.
-                    image: https://via.placeholder.com/640x480.png/00ddbb?text=sit
-                    ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
-                    sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
-                    full_user_info:
-                      id: 01hcshrdebeg92ybac7a0vdfr5
-                      name: Elenora Dickinson
-                      email: jamir.becker@example.com
-                      is_employee: 1
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdj3xa1fcv0jvfs5zb67
-                      ticket: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
-                links:
-                  self: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
-                  messages: >-
-                    http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
-  /api/tickets/1/status:
-    patch:
+                      messages: >-
+                        http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
+                      self: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                    messages:
+                      - content: >-
+                          Aliquam minus temporibus dolorem ducimus voluptas.
+                          Labore recusandae magni aperiam corporis. Nam
+                          similique laboriosam quisquam laboriosam sed.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        full_user_info:
+                          email: regular.user@test.com
+                          id: 01hcshrd35t1bzf856j0e2ep5s
+                          is_employee: 0
+                          name: Regular User
+                        id: 01hcshrdh0vt3xwn0j921482xt
+                        image: >-
+                          https://via.placeholder.com/640x480.png/002233?text=dignissimos
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdh0vt3xwn0j921482xt
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
+                        ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
+                      - content: >-
+                          Odit aut soluta iure voluptatem. Et sint explicabo
+                          dolor.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        full_user_info:
+                          email: employee.user@test.com
+                          id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                          is_employee: 1
+                          name: Employee User
+                        id: 01hcshrdh962wn4f1740cbdwj4
+                        image: >-
+                          https://via.placeholder.com/640x480.png/005555?text=dolor
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdh962wn4f1740cbdwj4
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        sender_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                        ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
+                      - content: >-
+                          Quia tempora sit soluta voluptatem in aliquid incidunt
+                          recusandae. Ratione ullam odit minus assumenda animi
+                          natus. Earum dolor cumque ad rerum qui culpa deserunt.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        full_user_info:
+                          email: tina.heaney@example.com
+                          id: 01hcshrde4zp74eez98qvbbygd
+                          is_employee: 0
+                          name: Brielle Dicki
+                        id: 01hcshrdhjfej5fffwrd7y0fea
+                        image: >-
+                          https://via.placeholder.com/640x480.png/004477?text=sed
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdhjfej5fffwrd7y0fea
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        sender_user_id: 01hcshrde4zp74eez98qvbbygd
+                        ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
+                      - content: >-
+                          Odio est vel aspernatur. Corporis dolorum quia maiores
+                          assumenda molestias. Quidem ut dicta ipsum tempora in.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        full_user_info:
+                          email: regular.user@test.com
+                          id: 01hcshrd35t1bzf856j0e2ep5s
+                          is_employee: 0
+                          name: Regular User
+                        id: 01hcshrdhtk0ec80ja8nj66rvm
+                        image: >-
+                          https://via.placeholder.com/640x480.png/0055bb?text=non
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdhtk0ec80ja8nj66rvm
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
+                        ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
+                      - content: >-
+                          Ipsa perferendis in in unde quia necessitatibus
+                          voluptatem possimus. At excepturi quia quis eum. Totam
+                          consequatur ipsum ipsa animi rerum non est.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        full_user_info:
+                          email: jamir.becker@example.com
+                          id: 01hcshrdebeg92ybac7a0vdfr5
+                          is_employee: 1
+                          name: Elenora Dickinson
+                        id: 01hcshrdj3xa1fcv0jvfs5zb67
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ddbb?text=sit
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdj3xa1fcv0jvfs5zb67
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdfrnmnzkcrmpcarx4br
+                    priority: low
+                    status: closed
+                    title: Adipisci quia dicta et eveniet error aut autem molestiae.
+  /api/tickets/01hctr52qpz6nbj8tjj8cxaa5e:
+    put:
       tags:
         - Tikets
-      summary: update Status
-      description: 'Update the ticket status to: open, closed, on hold, in progress'
+      summary: Update
+      description: Update the ticket
+      operationId: update
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example:
-                status: in progress
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
+              properties:
+                category:
+                  type: string
+                  example: 01hcshrdevwp7y426djk1vaxsa
+                description:
+                  type: string
+                  example: updayed This is a new ticket description
+                feedback_notes:
+                  type: string
+                  example: Feedback for the ticket
+                image:
+                  type: string
+                  example: ticket_image_url.jpg
+                priority:
+                  type: string
+                  example: high
+                status:
+                  type: string
+                  example: closed
+                title:
+                  type: string
+                  example: updated Ticket
+            examples:
+              Update:
+                value:
+                  category: 01hcshrdevwp7y426djk1vaxsa
+                  description: updayed This is a new ticket description
+                  feedback_notes: Feedback for the ticket
+                  image: ticket_image_url.jpg
+                  priority: high
+                  status: closed
+                  title: updated Ticket
       responses:
         '202':
-          description: Accepted
+          description: Success
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Mon, 09 Oct 2023 09:20:49 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
             Cache-Control:
               schema:
                 type: string
                 example: no-cache, private
-            Content-Type:
+            Connection:
               schema:
                 type: string
-                example: application/json
+                example: close
+            Date:
+              schema:
+                type: string
+                example: Sun, 15 Oct 2023 11:40:28 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
             X-RateLimit-Limit:
               schema:
-                type: integer
+                type: string
                 example: '60'
             X-RateLimit-Remaining:
               schema:
-                type: integer
-                example: '59'
-            Access-Control-Allow-Origin:
-              schema:
                 type: string
-                example: '*'
+                example: '58'
           content:
             application/json:
               schema:
                 type: object
-              example:
-                id: 1
-                title: Laborum repellat ut ducimus.
-                description: >-
-                  Occaecati placeat voluptatem sit pariatur qui. Earum ab
-                  asperiores quia corrupti minima. Rerum iste illum in cumque
-                  in. Quo neque dolor inventore maiores.
-                image: https://via.placeholder.com/640x480.png/00dddd?text=cumque
-                category:
-                  id: 3
-                  name: Doubts
-                status: in progress
-                priority: low
-                feedback_notes: >-
-                  Quo fugit cupiditate quas laborum ut amet. Rerum sit nisi
-                  omnis rem ipsum deserunt et. Autem deserunt odit et doloremque
-                  dolores excepturi qui quia.
-                creator_user_id: null
-                links:
-                  self: http://localhost/api/tickets/1
-                  messages: http://localhost/api/tickets/1/messages
+                properties:
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01hcshrdevwp7y426djk1vaxsa
+                      name:
+                        type: string
+                        example: Financial
+                  creator_user_id:
+                    type: string
+                    example: 01hcshrde4zp74eez98qvbbygd
+                  description:
+                    type: string
+                    example: updayed This is a new ticket description
+                  feedback_notes:
+                    type: string
+                    example: Feedback for the ticket
+                  id:
+                    type: string
+                    example: 01hcshrdfrnmnzkcrmpcarx4br
+                  image:
+                    type: string
+                    example: ticket_image_url.jpg
+                  links:
+                    type: object
+                    properties:
+                      messages:
+                        type: string
+                        example: >-
+                          http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
+                      self:
+                        type: string
+                        example: >-
+                          http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                  priority:
+                    type: string
+                    example: high
+                  status:
+                    type: string
+                    example: closed
+                  title:
+                    type: string
+                    example: updated Ticket
+              examples:
+                Success:
+                  value:
+                    category:
+                      id: 01hcshrdevwp7y426djk1vaxsa
+                      name: Financial
+                    creator_user_id: 01hcshrde4zp74eez98qvbbygd
+                    description: updayed This is a new ticket description
+                    feedback_notes: Feedback for the ticket
+                    id: 01hcshrdfrnmnzkcrmpcarx4br
+                    image: ticket_image_url.jpg
+                    links:
+                      messages: >-
+                        http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br/messages
+                      self: http://localhost/api/tickets/01hcshrdfrnmnzkcrmpcarx4br
+                    priority: high
+                    status: closed
+                    title: updated Ticket
+  /api/tickets/01hctr52qpz6nbj8tjj8cxaa5e/status:
+    patch:
+      tags:
+        - Tikets
+      summary: update Status
+      description: 'Update the ticket status to: open, closed, on hold, in progress'
+      operationId: updateStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: open
+            examples:
+              update Status:
+                value:
+                  status: open
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: in progress
+            examples:
+              update Status:
+                value:
+                  status: in progress
+      responses:
+        '202':
+          description: Success
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Connection:
+              schema:
+                type: string
+                example: close
+            Date:
+              schema:
+                type: string
+                example: Sun, 15 Oct 2023 22:54:27 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '59'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01hcshrdevwp7y426djk1vaxsa
+                      name:
+                        type: string
+                        example: Financial
+                  creator_user_id:
+                    type: string
+                    example: 01hcshrcwrrfwfn9kpc3jxbm8t
+                  description:
+                    type: string
+                    example: updayed This is a new ticket description
+                  feedback_notes:
+                    type: string
+                    example: Feedback for the ticket
+                  id:
+                    type: string
+                    example: 01hctr52qpz6nbj8tjj8cxaa5e
+                  image:
+                    type: string
+                    example: ticket_image_url.jpg
+                  links:
+                    type: object
+                    properties:
+                      messages:
+                        type: string
+                        example: >-
+                          http://localhost/api/tickets/01hctr52qpz6nbj8tjj8cxaa5e/messages
+                      self:
+                        type: string
+                        example: >-
+                          http://localhost/api/tickets/01hctr52qpz6nbj8tjj8cxaa5e
+                  priority:
+                    type: string
+                    example: high
+                  status:
+                    type: string
+                    example: in progress
+                  title:
+                    type: string
+                    example: updated Ticket
+              examples:
+                Success:
+                  value:
+                    category:
+                      id: 01hcshrdevwp7y426djk1vaxsa
+                      name: Financial
+                    creator_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                    description: updayed This is a new ticket description
+                    feedback_notes: Feedback for the ticket
+                    id: 01hctr52qpz6nbj8tjj8cxaa5e
+                    image: ticket_image_url.jpg
+                    links:
+                      messages: >-
+                        http://localhost/api/tickets/01hctr52qpz6nbj8tjj8cxaa5e/messages
+                      self: http://localhost/api/tickets/01hctr52qpz6nbj8tjj8cxaa5e
+                    priority: high
+                    status: in progress
+                    title: updated Ticket
+        '422':
+          description: Invalid Status provided
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Connection:
+              schema:
+                type: string
+                example: close
+            Date:
+              schema:
+                type: string
+                example: Sun, 15 Oct 2023 23:40:00 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '59'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      status:
+                        type: array
+                        items:
+                          type: string
+                          example: The selected status is invalid.
+                        example:
+                          - The selected status is invalid.
+                  message:
+                    type: string
+                    example: The selected status is invalid.
+              examples:
+                Invalid Status provided:
+                  value:
+                    errors:
+                      status:
+                        - The selected status is invalid.
+                    message: The selected status is invalid.
   /api/tickets/01hcshrdg191vhy69e5hc0egsk/messages:
     get:
       tags:
         - messages
       summary: Index
       description: Get The list of messages of a ticket
-      security:
-        - bearerAuth: []
+      operationId: index1
       responses:
         '200':
-          description: OK
+          description: Index
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:42:44 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
             Cache-Control:
               schema:
                 type: string
                 example: no-cache, private
-            Content-Type:
+            Connection:
               schema:
                 type: string
-                example: application/json
-            X-RateLimit-Limit:
+                example: close
+            Date:
               schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
+                type: string
+                example: Sun, 15 Oct 2023 11:42:44 GMT
+            Host:
               schema:
-                type: integer
-                example: '59'
+                type: string
+                example: localhost
             Vary:
               schema:
                 type: string
                 example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '59'
           content:
             application/json:
               schema:
                 type: object
-              example:
-                data:
-                  - id: 01hcshrdjrz0nj7fkwcj7kepx4
-                    content: >-
-                      Atque facere pariatur voluptas magni quae sint cumque
-                      fuga. Ea deleniti labore quasi velit. Occaecati atque
-                      assumenda rem excepturi cumque. Beatae maiores asperiores
-                      explicabo deleniti enim sit.
-                    image: https://via.placeholder.com/640x480.png/00cc77?text=sint
-                    ticket_id: 01hcshrdg191vhy69e5hc0egsk
-                    sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdjrz0nj7fkwcj7kepx4
-                      ticket: http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
-                  - id: 01hcshrdjz4akwh4bvtgw40n1z
-                    content: >-
-                      In at ad dolor laudantium minus perferendis. Modi maiores
-                      doloribus magni aut. Eius maxime reprehenderit ipsa qui.
-                    image: >-
-                      https://via.placeholder.com/640x480.png/00ffbb?text=dolores
-                    ticket_id: 01hcshrdg191vhy69e5hc0egsk
-                    sender_user_id: 01hcshrde4zp74eez98qvbbygd
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdjz4akwh4bvtgw40n1z
-                      ticket: http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
-                  - id: 01hcshrdk6er9wdhwe4ntv794e
-                    content: >-
-                      Consequatur et dolor dolorem praesentium est omnis aut.
-                      Dignissimos et vel quaerat nihil. Quam et ut a ut.
-                      Temporibus quaerat rerum ea et porro laborum temporibus.
-                    image: https://via.placeholder.com/640x480.png/0033ee?text=soluta
-                    ticket_id: 01hcshrdg191vhy69e5hc0egsk
-                    sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdk6er9wdhwe4ntv794e
-                      ticket: http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
-                  - id: 01hcshrdkd3nv1xnycw82hpbcc
-                    content: >-
-                      Commodi deserunt iste commodi molestias rerum. Dolor
-                      officia facilis qui illo aperiam et.
-                    image: >-
-                      https://via.placeholder.com/640x480.png/00ccdd?text=architecto
-                    ticket_id: 01hcshrdg191vhy69e5hc0egsk
-                    sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdkd3nv1xnycw82hpbcc
-                      ticket: http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
-                  - id: 01hcshrdkjc1thkhw8jahe6dw5
-                    content: >-
-                      Ipsa dolor est eum nemo ut deserunt. Inventore cum nam
-                      dolore a sit voluptatibus est itaque. Voluptas magnam
-                      rerum voluptatum exercitationem.
-                    image: >-
-                      https://via.placeholder.com/640x480.png/00cc00?text=excepturi
-                    ticket_id: 01hcshrdg191vhy69e5hc0egsk
-                    sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdkjc1thkhw8jahe6dw5
-                      ticket: http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
-                  - id: 01hcshrdm7vxfnjcmcpvcjb8ff
-                    content: >-
-                      Vel harum est et optio. Occaecati ex excepturi voluptas
-                      ipsa magnam. Labore iste id odio molestiae omnis non
-                      eligendi est. Corrupti sed libero est eos est veritatis.
-                    image: >-
-                      https://via.placeholder.com/640x480.png/0044ff?text=delectus
-                    ticket_id: 01hcshrdg793mq1ys624q7yyx0
-                    sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdm7vxfnjcmcpvcjb8ff
-                      ticket: http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
-                  - id: 01hcshrdmf45xhwydfnyc2zgwf
-                    content: >-
-                      Aut id quia asperiores et vel autem quas. Est
-                      exercitationem consectetur necessitatibus expedita aut.
-                      Inventore ipsa rerum quibusdam doloremque odio magni
-                      culpa.
-                    image: https://via.placeholder.com/640x480.png/0099ff?text=cumque
-                    ticket_id: 01hcshrdg793mq1ys624q7yyx0
-                    sender_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdmf45xhwydfnyc2zgwf
-                      ticket: http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
-                  - id: 01hcshrdmppn91k47zeck9dxzj
-                    content: >-
-                      Dolor aspernatur ut rerum reiciendis minus. Voluptas
-                      mollitia veritatis doloribus alias numquam. Odio itaque
-                      aut pariatur. Autem blanditiis eveniet quam ullam
-                      mollitia.
-                    image: https://via.placeholder.com/640x480.png/00ee33?text=neque
-                    ticket_id: 01hcshrdg793mq1ys624q7yyx0
-                    sender_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdmppn91k47zeck9dxzj
-                      ticket: http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
-                  - id: 01hcshrdmwmwdxxk9r323ne3p6
-                    content: >-
-                      Sint corrupti labore ut placeat. Aperiam quam atque eaque
-                      dignissimos est et quae est. Repellendus dolorum repellat
-                      eligendi debitis quam. Placeat similique amet velit
-                      dolore. Et consequuntur provident omnis et beatae quod.
-                    image: >-
-                      https://via.placeholder.com/640x480.png/00ccee?text=dolorem
-                    ticket_id: 01hcshrdg793mq1ys624q7yyx0
-                    sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdmwmwdxxk9r323ne3p6
-                      ticket: http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
-                  - id: 01hcshrdn1wjey739qrdmrge8c
-                    content: >-
-                      Rem perspiciatis qui saepe ut. Sapiente et est odio est.
-                      Eum magnam libero odio ipsum voluptatibus. Eum aut
-                      assumenda sit ut cum quisquam sit odit.
-                    image: >-
-                      https://via.placeholder.com/640x480.png/0077ee?text=nesciunt
-                    ticket_id: 01hcshrdg793mq1ys624q7yyx0
-                    sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    links:
-                      self: http://localhost/api/messages/01hcshrdn1wjey739qrdmrge8c
-                      ticket: http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        content:
+                          type: string
+                          example: >-
+                            Atque facere pariatur voluptas magni quae sint
+                            cumque fuga. Ea deleniti labore quasi velit.
+                            Occaecati atque assumenda rem excepturi cumque.
+                            Beatae maiores asperiores explicabo deleniti enim
+                            sit.
+                        created_at:
+                          type: string
+                          example: '2023-10-15T11:32:48.000000Z'
+                        id:
+                          type: string
+                          example: 01hcshrdjrz0nj7fkwcj7kepx4
+                        image:
+                          type: string
+                          example: >-
+                            https://via.placeholder.com/640x480.png/00cc77?text=sint
+                        links:
+                          type: object
+                          properties:
+                            self:
+                              type: string
+                              example: >-
+                                http://localhost/api/messages/01hcshrdjrz0nj7fkwcj7kepx4
+                            ticket:
+                              type: string
+                              example: >-
+                                http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        sender_user_id:
+                          type: string
+                          example: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id:
+                          type: string
+                          example: 01hcshrdg191vhy69e5hc0egsk
+                    example:
+                      - content: >-
+                          Atque facere pariatur voluptas magni quae sint cumque
+                          fuga. Ea deleniti labore quasi velit. Occaecati atque
+                          assumenda rem excepturi cumque. Beatae maiores
+                          asperiores explicabo deleniti enim sit.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdjrz0nj7fkwcj7kepx4
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00cc77?text=sint
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdjrz0nj7fkwcj7kepx4
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdg191vhy69e5hc0egsk
+                      - content: >-
+                          In at ad dolor laudantium minus perferendis. Modi
+                          maiores doloribus magni aut. Eius maxime reprehenderit
+                          ipsa qui.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdjz4akwh4bvtgw40n1z
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ffbb?text=dolores
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdjz4akwh4bvtgw40n1z
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        sender_user_id: 01hcshrde4zp74eez98qvbbygd
+                        ticket_id: 01hcshrdg191vhy69e5hc0egsk
+                      - content: >-
+                          Consequatur et dolor dolorem praesentium est omnis
+                          aut. Dignissimos et vel quaerat nihil. Quam et ut a
+                          ut. Temporibus quaerat rerum ea et porro laborum
+                          temporibus.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdk6er9wdhwe4ntv794e
+                        image: >-
+                          https://via.placeholder.com/640x480.png/0033ee?text=soluta
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdk6er9wdhwe4ntv794e
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
+                        ticket_id: 01hcshrdg191vhy69e5hc0egsk
+                      - content: >-
+                          Commodi deserunt iste commodi molestias rerum. Dolor
+                          officia facilis qui illo aperiam et.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdkd3nv1xnycw82hpbcc
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ccdd?text=architecto
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdkd3nv1xnycw82hpbcc
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdg191vhy69e5hc0egsk
+                      - content: >-
+                          Ipsa dolor est eum nemo ut deserunt. Inventore cum nam
+                          dolore a sit voluptatibus est itaque. Voluptas magnam
+                          rerum voluptatum exercitationem.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdkjc1thkhw8jahe6dw5
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00cc00?text=excepturi
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdkjc1thkhw8jahe6dw5
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdg191vhy69e5hc0egsk
+                      - content: >-
+                          Vel harum est et optio. Occaecati ex excepturi
+                          voluptas ipsa magnam. Labore iste id odio molestiae
+                          omnis non eligendi est. Corrupti sed libero est eos
+                          est veritatis.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdm7vxfnjcmcpvcjb8ff
+                        image: >-
+                          https://via.placeholder.com/640x480.png/0044ff?text=delectus
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdm7vxfnjcmcpvcjb8ff
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdg793mq1ys624q7yyx0
+                      - content: >-
+                          Aut id quia asperiores et vel autem quas. Est
+                          exercitationem consectetur necessitatibus expedita
+                          aut. Inventore ipsa rerum quibusdam doloremque odio
+                          magni culpa.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdmf45xhwydfnyc2zgwf
+                        image: >-
+                          https://via.placeholder.com/640x480.png/0099ff?text=cumque
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdmf45xhwydfnyc2zgwf
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        sender_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                        ticket_id: 01hcshrdg793mq1ys624q7yyx0
+                      - content: >-
+                          Dolor aspernatur ut rerum reiciendis minus. Voluptas
+                          mollitia veritatis doloribus alias numquam. Odio
+                          itaque aut pariatur. Autem blanditiis eveniet quam
+                          ullam mollitia.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdmppn91k47zeck9dxzj
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ee33?text=neque
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdmppn91k47zeck9dxzj
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        sender_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                        ticket_id: 01hcshrdg793mq1ys624q7yyx0
+                      - content: >-
+                          Sint corrupti labore ut placeat. Aperiam quam atque
+                          eaque dignissimos est et quae est. Repellendus dolorum
+                          repellat eligendi debitis quam. Placeat similique amet
+                          velit dolore. Et consequuntur provident omnis et
+                          beatae quod.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdmwmwdxxk9r323ne3p6
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ccee?text=dolorem
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdmwmwdxxk9r323ne3p6
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
+                        ticket_id: 01hcshrdg793mq1ys624q7yyx0
+                      - content: >-
+                          Rem perspiciatis qui saepe ut. Sapiente et est odio
+                          est. Eum magnam libero odio ipsum voluptatibus. Eum
+                          aut assumenda sit ut cum quisquam sit odit.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdn1wjey739qrdmrge8c
+                        image: >-
+                          https://via.placeholder.com/640x480.png/0077ee?text=nesciunt
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdn1wjey739qrdmrge8c
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdg793mq1ys624q7yyx0
+              examples:
+                Index:
+                  value:
+                    data:
+                      - content: >-
+                          Atque facere pariatur voluptas magni quae sint cumque
+                          fuga. Ea deleniti labore quasi velit. Occaecati atque
+                          assumenda rem excepturi cumque. Beatae maiores
+                          asperiores explicabo deleniti enim sit.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdjrz0nj7fkwcj7kepx4
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00cc77?text=sint
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdjrz0nj7fkwcj7kepx4
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdg191vhy69e5hc0egsk
+                      - content: >-
+                          In at ad dolor laudantium minus perferendis. Modi
+                          maiores doloribus magni aut. Eius maxime reprehenderit
+                          ipsa qui.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdjz4akwh4bvtgw40n1z
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ffbb?text=dolores
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdjz4akwh4bvtgw40n1z
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        sender_user_id: 01hcshrde4zp74eez98qvbbygd
+                        ticket_id: 01hcshrdg191vhy69e5hc0egsk
+                      - content: >-
+                          Consequatur et dolor dolorem praesentium est omnis
+                          aut. Dignissimos et vel quaerat nihil. Quam et ut a
+                          ut. Temporibus quaerat rerum ea et porro laborum
+                          temporibus.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdk6er9wdhwe4ntv794e
+                        image: >-
+                          https://via.placeholder.com/640x480.png/0033ee?text=soluta
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdk6er9wdhwe4ntv794e
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
+                        ticket_id: 01hcshrdg191vhy69e5hc0egsk
+                      - content: >-
+                          Commodi deserunt iste commodi molestias rerum. Dolor
+                          officia facilis qui illo aperiam et.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdkd3nv1xnycw82hpbcc
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ccdd?text=architecto
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdkd3nv1xnycw82hpbcc
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdg191vhy69e5hc0egsk
+                      - content: >-
+                          Ipsa dolor est eum nemo ut deserunt. Inventore cum nam
+                          dolore a sit voluptatibus est itaque. Voluptas magnam
+                          rerum voluptatum exercitationem.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdkjc1thkhw8jahe6dw5
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00cc00?text=excepturi
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdkjc1thkhw8jahe6dw5
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdg191vhy69e5hc0egsk
+                      - content: >-
+                          Vel harum est et optio. Occaecati ex excepturi
+                          voluptas ipsa magnam. Labore iste id odio molestiae
+                          omnis non eligendi est. Corrupti sed libero est eos
+                          est veritatis.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdm7vxfnjcmcpvcjb8ff
+                        image: >-
+                          https://via.placeholder.com/640x480.png/0044ff?text=delectus
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdm7vxfnjcmcpvcjb8ff
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdg793mq1ys624q7yyx0
+                      - content: >-
+                          Aut id quia asperiores et vel autem quas. Est
+                          exercitationem consectetur necessitatibus expedita
+                          aut. Inventore ipsa rerum quibusdam doloremque odio
+                          magni culpa.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdmf45xhwydfnyc2zgwf
+                        image: >-
+                          https://via.placeholder.com/640x480.png/0099ff?text=cumque
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdmf45xhwydfnyc2zgwf
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        sender_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                        ticket_id: 01hcshrdg793mq1ys624q7yyx0
+                      - content: >-
+                          Dolor aspernatur ut rerum reiciendis minus. Voluptas
+                          mollitia veritatis doloribus alias numquam. Odio
+                          itaque aut pariatur. Autem blanditiis eveniet quam
+                          ullam mollitia.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdmppn91k47zeck9dxzj
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ee33?text=neque
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdmppn91k47zeck9dxzj
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        sender_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                        ticket_id: 01hcshrdg793mq1ys624q7yyx0
+                      - content: >-
+                          Sint corrupti labore ut placeat. Aperiam quam atque
+                          eaque dignissimos est et quae est. Repellendus dolorum
+                          repellat eligendi debitis quam. Placeat similique amet
+                          velit dolore. Et consequuntur provident omnis et
+                          beatae quod.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdmwmwdxxk9r323ne3p6
+                        image: >-
+                          https://via.placeholder.com/640x480.png/00ccee?text=dolorem
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdmwmwdxxk9r323ne3p6
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        sender_user_id: 01hcshrd35t1bzf856j0e2ep5s
+                        ticket_id: 01hcshrdg793mq1ys624q7yyx0
+                      - content: >-
+                          Rem perspiciatis qui saepe ut. Sapiente et est odio
+                          est. Eum magnam libero odio ipsum voluptatibus. Eum
+                          aut assumenda sit ut cum quisquam sit odit.
+                        created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdn1wjey739qrdmrge8c
+                        image: >-
+                          https://via.placeholder.com/640x480.png/0077ee?text=nesciunt
+                        links:
+                          self: >-
+                            http://localhost/api/messages/01hcshrdn1wjey739qrdmrge8c
+                          ticket: >-
+                            http://localhost/api/tickets/01hcshrdg793mq1ys624q7yyx0
+                        sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                        ticket_id: 01hcshrdg793mq1ys624q7yyx0
     post:
       tags:
         - messages
       summary: Create
       description: Store a message according to a ticket
+      operationId: create1
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example:
-                content: This is a new message content
-                image: >-
-                  https://images.unsplash.com/photo-1493612276216-ee3925520721?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80
-      security:
-        - bearerAuth: []
+              properties:
+                content:
+                  type: string
+                  example: This is a new message content
+                image:
+                  type: string
+                  example: message_image_url.jpg
+            examples:
+              Create:
+                value:
+                  content: This is a new message content
+                  image: message_image_url.jpg
       responses:
         '201':
-          description: Created
+          description: Success
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:43:02 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
             Cache-Control:
               schema:
                 type: string
                 example: no-cache, private
-            Content-Type:
+            Connection:
               schema:
                 type: string
-                example: application/json
-            X-RateLimit-Limit:
+                example: close
+            Date:
               schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
+                type: string
+                example: Sun, 15 Oct 2023 11:43:02 GMT
+            Host:
               schema:
-                type: integer
-                example: '58'
+                type: string
+                example: localhost
             Vary:
               schema:
                 type: string
                 example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '58'
           content:
             application/json:
               schema:
                 type: object
-              example:
-                id: 01hcsjb57ytr1zc1s4jfz6qn0p
-                content: This is a new message content
-                image: message_image_url.jpg
-                ticket_id: 01hcshrdg191vhy69e5hc0egsk
-                sender_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
-                created_at: '2023-10-15T11:43:02.000000Z'
-                links:
-                  self: http://localhost/api/messages/01hcsjb57ytr1zc1s4jfz6qn0p
-                  ticket: http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                properties:
+                  content:
+                    type: string
+                    example: This is a new message content
+                  created_at:
+                    type: string
+                    example: '2023-10-15T11:43:02.000000Z'
+                  id:
+                    type: string
+                    example: 01hcsjb57ytr1zc1s4jfz6qn0p
+                  image:
+                    type: string
+                    example: message_image_url.jpg
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: >-
+                          http://localhost/api/messages/01hcsjb57ytr1zc1s4jfz6qn0p
+                      ticket:
+                        type: string
+                        example: >-
+                          http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                  sender_user_id:
+                    type: string
+                    example: 01hcshrcwrrfwfn9kpc3jxbm8t
+                  ticket_id:
+                    type: string
+                    example: 01hcshrdg191vhy69e5hc0egsk
+              examples:
+                Success:
+                  value:
+                    content: This is a new message content
+                    created_at: '2023-10-15T11:43:02.000000Z'
+                    id: 01hcsjb57ytr1zc1s4jfz6qn0p
+                    image: message_image_url.jpg
+                    links:
+                      self: http://localhost/api/messages/01hcsjb57ytr1zc1s4jfz6qn0p
+                      ticket: http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                    sender_user_id: 01hcshrcwrrfwfn9kpc3jxbm8t
+                    ticket_id: 01hcshrdg191vhy69e5hc0egsk
   /api/messages/01hcsjb57ytr1zc1s4jfz6qn0p:
     get:
       tags:
         - messages
       summary: Show
       description: Show a particular message
-      security:
-        - bearerAuth: []
+      operationId: show2
       responses:
         '200':
-          description: OK
+          description: Show
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:44:11 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
             Cache-Control:
               schema:
                 type: string
                 example: no-cache, private
-            Content-Type:
+            Connection:
               schema:
                 type: string
-                example: application/json
-            X-RateLimit-Limit:
+                example: close
+            Date:
               schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
+                type: string
+                example: Sun, 15 Oct 2023 11:44:11 GMT
+            Host:
               schema:
-                type: integer
-                example: '59'
+                type: string
+                example: localhost
             Vary:
               schema:
                 type: string
                 example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '59'
           content:
             application/json:
               schema:
                 type: object
-              example:
-                data:
-                  id: 01hcshrdjrz0nj7fkwcj7kepx4
-                  content: >-
-                    Atque facere pariatur voluptas magni quae sint cumque fuga.
-                    Ea deleniti labore quasi velit. Occaecati atque assumenda
-                    rem excepturi cumque. Beatae maiores asperiores explicabo
-                    deleniti enim sit.
-                  image: https://via.placeholder.com/640x480.png/00cc77?text=sint
-                  ticket_id: 01hcshrdg191vhy69e5hc0egsk
-                  sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
-                  created_at: '2023-10-15T11:32:48.000000Z'
-                  links:
-                    self: http://localhost/api/messages/01hcshrdjrz0nj7fkwcj7kepx4
-                    ticket: http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                        example: >-
+                          Atque facere pariatur voluptas magni quae sint cumque
+                          fuga. Ea deleniti labore quasi velit. Occaecati atque
+                          assumenda rem excepturi cumque. Beatae maiores
+                          asperiores explicabo deleniti enim sit.
+                      created_at:
+                        type: string
+                        example: '2023-10-15T11:32:48.000000Z'
+                      id:
+                        type: string
+                        example: 01hcshrdjrz0nj7fkwcj7kepx4
+                      image:
+                        type: string
+                        example: >-
+                          https://via.placeholder.com/640x480.png/00cc77?text=sint
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            example: >-
+                              http://localhost/api/messages/01hcshrdjrz0nj7fkwcj7kepx4
+                          ticket:
+                            type: string
+                            example: >-
+                              http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                      sender_user_id:
+                        type: string
+                        example: 01hcshrdebeg92ybac7a0vdfr5
+                      ticket_id:
+                        type: string
+                        example: 01hcshrdg191vhy69e5hc0egsk
+              examples:
+                Show:
+                  value:
+                    data:
+                      content: >-
+                        Atque facere pariatur voluptas magni quae sint cumque
+                        fuga. Ea deleniti labore quasi velit. Occaecati atque
+                        assumenda rem excepturi cumque. Beatae maiores
+                        asperiores explicabo deleniti enim sit.
+                      created_at: '2023-10-15T11:32:48.000000Z'
+                      id: 01hcshrdjrz0nj7fkwcj7kepx4
+                      image: https://via.placeholder.com/640x480.png/00cc77?text=sint
+                      links:
+                        self: >-
+                          http://localhost/api/messages/01hcshrdjrz0nj7fkwcj7kepx4
+                        ticket: >-
+                          http://localhost/api/tickets/01hcshrdg191vhy69e5hc0egsk
+                      sender_user_id: 01hcshrdebeg92ybac7a0vdfr5
+                      ticket_id: 01hcshrdg191vhy69e5hc0egsk
   /api/messages/3:
     delete:
       tags:
         - messages
       summary: Delete
       description: Delete tje message
-      security:
-        - bearerAuth: []
+      operationId: delete1
       responses:
         '204':
-          description: No Content
+          description: Delete
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Mon, 09 Oct 2023 00:55:23 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, private
-            X-RateLimit-Limit:
-              schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
-              schema:
-                type: integer
-                example: '57'
             Access-Control-Allow-Origin:
               schema:
                 type: string
                 example: '*'
-          content:
-            text/plain:
+            Cache-Control:
               schema:
                 type: string
-              example: null
+                example: no-cache, private
+            Connection:
+              schema:
+                type: string
+                example: close
+            Date:
+              schema:
+                type: string
+                example: Mon, 09 Oct 2023 00:55:23 GMT
+            Host:
+              schema:
+                type: string
+                example: localhost
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '57'
+          content: {}
   /api/categories:
     get:
       tags:
@@ -1343,69 +2520,118 @@ paths:
       description: >-
         Listing of alll the tickets in the application, we can use or filter by
         status, category or by priority
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: application/json
+      operationId: index2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category_id:
+                  type: number
+                  example: 1
+                priority:
+                  type: string
+                  example: high
+                status:
+                  type: string
+                  example: closed
+            examples:
+              Index:
+                value:
+                  category_id: 1
+                  priority: high
+                  status: closed
       responses:
         '200':
-          description: OK
+          description: Index
           headers:
-            Host:
-              schema:
-                type: string
-                example: localhost
-            Date:
-              schema:
-                type: string
-                example: Sun, 15 Oct 2023 11:37:04 GMT
-            Connection:
-              schema:
-                type: string
-                example: close
-            X-Powered-By:
-              schema:
-                type: string
-                example: PHP/8.2.11
             Cache-Control:
               schema:
                 type: string
                 example: no-cache, private
-            Content-Type:
+            Connection:
               schema:
                 type: string
-                example: application/json
-            X-RateLimit-Limit:
+                example: close
+            Date:
               schema:
-                type: integer
-                example: '60'
-            X-RateLimit-Remaining:
+                type: string
+                example: Sun, 15 Oct 2023 11:37:04 GMT
+            Host:
               schema:
-                type: integer
-                example: '58'
+                type: string
+                example: localhost
             Vary:
               schema:
                 type: string
                 example: Origin
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.2.11
+            X-RateLimit-Limit:
+              schema:
+                type: string
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+                example: '58'
           content:
             application/json:
               schema:
                 type: object
-              example:
-                data:
-                  - id: 01hcshrdej13858f0p2awwws2j
-                    name: Technical support
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    updated_at: '2023-10-15T11:32:48.000000Z'
-                  - id: 01hcshrdevwp7y426djk1vaxsa
-                    name: Financial
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    updated_at: '2023-10-15T11:32:48.000000Z'
-                  - id: 01hcshrdf35vv9tg2bxx4kvp9j
-                    name: Doubts
-                    created_at: '2023-10-15T11:32:48.000000Z'
-                    updated_at: '2023-10-15T11:32:48.000000Z'
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        created_at:
+                          type: string
+                          example: '2023-10-15T11:32:48.000000Z'
+                        id:
+                          type: string
+                          example: 01hcshrdej13858f0p2awwws2j
+                        name:
+                          type: string
+                          example: Technical support
+                        updated_at:
+                          type: string
+                          example: '2023-10-15T11:32:48.000000Z'
+                    example:
+                      - created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdej13858f0p2awwws2j
+                        name: Technical support
+                        updated_at: '2023-10-15T11:32:48.000000Z'
+                      - created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdevwp7y426djk1vaxsa
+                        name: Financial
+                        updated_at: '2023-10-15T11:32:48.000000Z'
+                      - created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdf35vv9tg2bxx4kvp9j
+                        name: Doubts
+                        updated_at: '2023-10-15T11:32:48.000000Z'
+              examples:
+                Index:
+                  value:
+                    data:
+                      - created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdej13858f0p2awwws2j
+                        name: Technical support
+                        updated_at: '2023-10-15T11:32:48.000000Z'
+                      - created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdevwp7y426djk1vaxsa
+                        name: Financial
+                        updated_at: '2023-10-15T11:32:48.000000Z'
+                      - created_at: '2023-10-15T11:32:48.000000Z'
+                        id: 01hcshrdf35vv9tg2bxx4kvp9j
+                        name: Doubts
+                        updated_at: '2023-10-15T11:32:48.000000Z'
+tags:
+  - name: Authentication
+  - name: User
+  - name: Tikets
+  - name: messages
+  - name: Category
