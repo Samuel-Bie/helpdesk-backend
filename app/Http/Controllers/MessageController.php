@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
-use App\Models\Message;
-use App\Jobs\MessageSent;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\MessageResource;
 use App\Http\Requests\StoreMessageRequest;
-use App\Http\Requests\UpdateMessageRequest;
+use App\Http\Resources\MessageResource;
 use App\Http\Resources\MessageResourceCollection;
+use App\Jobs\MessageSent;
+use App\Models\Message;
+use App\Models\Ticket;
 
 class MessageController extends Controller
 {
@@ -22,7 +20,6 @@ class MessageController extends Controller
 
         return new MessageResourceCollection($messages);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -42,6 +39,7 @@ class MessageController extends Controller
         $data = (new MessageResource($message))->toJson();
 
         MessageSent::dispatch($data);
+
         return response()->json(new MessageResource($message->setRelations([])), 201);
     }
 
@@ -53,16 +51,13 @@ class MessageController extends Controller
         return new MessageResource($message->load('user'));
     }
 
-
-
-
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Message $message)
     {
         $message->delete();
+
         return response()->json(null, 204);
     }
 }

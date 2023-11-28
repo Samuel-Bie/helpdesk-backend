@@ -2,14 +2,13 @@
 
 namespace App\Exceptions;
 
-use Throwable;
-use Illuminate\Http\Request;
-use App\Exceptions\ApiExceptionTrait;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
     use ApiExceptionTrait;
+
     /**
      * The list of the inputs that are never flashed to the session on validation exceptions.
      *
@@ -31,13 +30,10 @@ class Handler extends ExceptionHandler
         });
     }
 
-
-
     /**
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $e
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Throwable
@@ -50,6 +46,7 @@ We will verify if its coming by api or is expecting json
         if ($request->is('api/*') or $request->expectsJson()) {
             return $this->handleApiException($request, $e);
         }
+
         return parent::render($request, $e);
     }
 }

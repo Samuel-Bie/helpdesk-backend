@@ -3,21 +3,19 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Ticket;
-use App\Models\Message;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
-    use Notifiable;
     use HasUlids;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -52,8 +50,6 @@ class User extends Authenticatable
 
     /**
      * Get all of the messages for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function messages(): HasMany
     {
@@ -62,8 +58,6 @@ class User extends Authenticatable
 
     /**
      * Get all of the tickets for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function tickets(): HasMany
     {

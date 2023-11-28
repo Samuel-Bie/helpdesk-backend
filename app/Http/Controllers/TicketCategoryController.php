@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTicketCategoryRequest;
-use App\Http\Requests\UpdateTicketCategoryRequest;
 use App\Models\TicketCategory;
 
 class TicketCategoryController extends Controller
@@ -16,7 +14,7 @@ class TicketCategoryController extends Controller
         TicketCategory::all();
 
         return response()->json([
-            'data' => TicketCategory::all()
+            'data' => TicketCategory::all(),
         ]);
     }
 }

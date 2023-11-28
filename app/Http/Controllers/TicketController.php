@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\TicketResource;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\TicketFilterRequest;
 use App\Http\Requests\UpdateTicketRequest;
-use App\Http\Resources\TicketHistoryResource;
 use App\Http\Requests\UpdateTicketStatusRequest;
+use App\Http\Resources\TicketHistoryResource;
+use App\Http\Resources\TicketResource;
 use App\Http\Resources\TicketResourceCollection;
+use App\Models\Ticket;
 
 class TicketController extends Controller
 {
-    public function index(TicketFilterRequest  $request)
+    public function index(TicketFilterRequest $request)
     {
         // Validation has passed, you can access the validated data
         $validatedData = $request->validated();
@@ -46,8 +45,6 @@ class TicketController extends Controller
         return new TicketResourceCollection($tickets);
     }
 
-
-
     public function store(StoreTicketRequest $request)
     {
         $ticket = new Ticket();
@@ -69,11 +66,9 @@ class TicketController extends Controller
         if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
             return response()->json(new TicketResource($ticket), 200);
         } else {
-            throw new \Exception("You are not authorized to view this ticket", 403);
+            throw new \Exception('You are not authorized to view this ticket', 403);
         }
     }
-
-
 
     public function update(UpdateTicketRequest $request, Ticket $ticket)
     {
@@ -89,7 +84,7 @@ class TicketController extends Controller
 
             return response()->json(new TicketResource($ticket), 202);
         } else {
-            throw new \Exception("You are not authorized to update this ticket", 403);
+            throw new \Exception('You are not authorized to update this ticket', 403);
         }
     }
 
@@ -98,9 +93,10 @@ class TicketController extends Controller
         if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
             $ticket->status = $request->input('status');
             $ticket->save();
+
             return response()->json(new TicketResource($ticket), 202);
         } else {
-            throw new \Exception("You are not authorized to update this ticket", 403);
+            throw new \Exception('You are not authorized to update this ticket', 403);
         }
     }
 
@@ -108,9 +104,10 @@ class TicketController extends Controller
     {
         if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
             $ticket->load('messages.user');
+
             return response()->json(new TicketHistoryResource($ticket), 200);
         } else {
-            throw new \Exception("You are not authorized to view this ticket", 403);
+            throw new \Exception('You are not authorized to view this ticket', 403);
         }
     }
 
@@ -118,9 +115,10 @@ class TicketController extends Controller
     {
         if ($ticket->user->id == request()->user()->id) {
             $ticket->delete();
+
             return response()->json(null, 204);
         } else {
-            throw new \Exception("You are not authorized to view this ticket", 403);
+            throw new \Exception('You are not authorized to view this ticket', 403);
         }
     }
 }

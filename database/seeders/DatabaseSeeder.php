@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\User;
-use App\Models\Ticket;
 use App\Models\Message;
+use App\Models\Ticket;
 use App\Models\TicketCategory;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -30,16 +30,14 @@ class DatabaseSeeder extends Seeder
             'is_employee' => false,
         ]);
 
-
-
         User::factory(2)->create();
 
         collect([
-            'Technical support', 'Financial', 'Doubts'
+            'Technical support', 'Financial', 'Doubts',
         ])->each(function ($category_name) {
             TicketCategory::create([
-                  'name' => $category_name
-              ]);
+                'name' => $category_name,
+            ]);
         });
 
         $tickets = Ticket::factory()->count(3)->create();

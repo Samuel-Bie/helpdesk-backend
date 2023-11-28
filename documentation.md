@@ -82,13 +82,16 @@ This excercise is composed by 3 services, which are:
 
 
 **Backend service**
-The installation process is described at https://github.com/Samuel-Bie/helpdesk-backend/blob/master/README.md
+The installation process is described at
+https://github.com/Samuel-Bie/helpdesk-backend/blob/master/README.md
 
   **Notification service**
-  The installation process is described at https://github.com/Samuel-Bie/helpdesk-notification-service/blob/master/README.md
+  The installation process is described at
+  https://github.com/Samuel-Bie/helpdesk-notification-service/blob/master/README.md
 
   **Front end service**
-The installation process is described at https://github.com/Samuel-Bie/helpdesk-frontend/blob/master/README.md
+The installation process is described at
+https://github.com/Samuel-Bie/helpdesk-frontend/blob/master/README.md
 
 ## Database Schema
 

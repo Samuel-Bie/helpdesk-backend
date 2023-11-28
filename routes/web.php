@@ -15,9 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return [
-        'description'=>'HelpDesk Service API'
+        'description' => 'HelpDesk Service API',
     ];
 });
-
 
 Route::view('/api/documentation', 'swagger.index');
