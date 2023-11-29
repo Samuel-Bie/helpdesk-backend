@@ -63,16 +63,15 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
-        if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
+        if (request()->user()->is_employee || $ticket->user->id === request()->user()->id) {
             return response()->json(new TicketResource($ticket), 200);
-        } else {
-            throw new \Exception('You are not authorized to view this ticket', 403);
         }
+        throw new \Exception('You are not authorized to view this ticket', 403);
     }
 
     public function update(UpdateTicketRequest $request, Ticket $ticket)
     {
-        if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
+        if (request()->user()->is_employee || $ticket->user->id === request()->user()->id) {
             $ticket->title = $request->input('title');
             $ticket->description = $request->input('description');
             $ticket->image = $request->input('image');
@@ -83,42 +82,38 @@ class TicketController extends Controller
             $ticket->save();
 
             return response()->json(new TicketResource($ticket), 202);
-        } else {
-            throw new \Exception('You are not authorized to update this ticket', 403);
         }
+        throw new \Exception('You are not authorized to update this ticket', 403);
     }
 
     public function status(UpdateTicketStatusRequest $request, Ticket $ticket)
     {
-        if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
+        if (request()->user()->is_employee || $ticket->user->id === request()->user()->id) {
             $ticket->status = $request->input('status');
             $ticket->save();
 
             return response()->json(new TicketResource($ticket), 202);
-        } else {
-            throw new \Exception('You are not authorized to update this ticket', 403);
         }
+        throw new \Exception('You are not authorized to update this ticket', 403);
     }
 
     public function history(Ticket $ticket)
     {
-        if (request()->user()->is_employee || $ticket->user->id == request()->user()->id) {
+        if (request()->user()->is_employee || $ticket->user->id === request()->user()->id) {
             $ticket->load('messages.user');
 
             return response()->json(new TicketHistoryResource($ticket), 200);
-        } else {
-            throw new \Exception('You are not authorized to view this ticket', 403);
         }
+        throw new \Exception('You are not authorized to view this ticket', 403);
     }
 
     public function destroy(Ticket $ticket)
     {
-        if ($ticket->user->id == request()->user()->id) {
+        if ($ticket->user->id === request()->user()->id) {
             $ticket->delete();
 
             return response()->json(null, 204);
-        } else {
-            throw new \Exception('You are not authorized to view this ticket', 403);
         }
+        throw new \Exception('You are not authorized to view this ticket', 403);
     }
 }

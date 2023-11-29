@@ -27,6 +27,5 @@ class MessageSent implements ShouldQueue
      */
     public function handle(): void
     {
-        //
     }
 }

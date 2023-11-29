@@ -26,7 +26,6 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
         });
     }
 
@@ -34,6 +33,7 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Throwable

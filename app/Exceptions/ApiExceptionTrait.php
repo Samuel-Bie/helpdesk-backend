@@ -24,6 +24,7 @@ trait ApiExceptionTrait
      *
      * @param  mixed  $request
      * @param  mixed  $exception
+     *
      * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory | \Symfony\Component\HttpFoundation\Response;
      */
     public function handleApiException($request, $exception): Response
